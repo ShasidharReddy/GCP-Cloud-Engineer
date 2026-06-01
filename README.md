@@ -30,6 +30,7 @@ A curated collection of GCP command references, scripts, and step-by-step lab gu
 | [`CostOptimization/`](./CostOptimization/) | 🔷 **Cost Optimization** — CUDs, SUDs, Spot VMs, right-sizing, billing, FinOps best practices |
 | [`HybridMultiCloud/`](./HybridMultiCloud/) | 🔷 **Hybrid & Multi-Cloud** — Anthos, GKE on-prem, Service Mesh, Config Management, fleet management |
 | [`Serverless/`](./Serverless/) | 🔷 **Serverless Patterns** — Cloud Run vs Functions vs App Engine, Eventarc, Workflows, API Gateway |
+| [`Database/`](./Database/) | 🔷 **Database Services** — Cloud SQL, AlloyDB, Spanner, Firestore, Bigtable, Memorystore, DMS, decision guide |
 
 ---
 
