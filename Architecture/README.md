@@ -2,6 +2,131 @@
 
 Visual reference diagrams for Google Cloud Platform services. All diagrams use [Mermaid](https://mermaid.js.org/) syntax and render natively on GitHub.
 
+> 📌 **Reference**: The compute decision flowchart is based on the official Google Cloud blog post: ["Where should I run my stuff?"](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)
+>
+> ![GCP Compute Decision Flowchart](https://storage.googleapis.com/gweb-cloudblog-publish/images/CvKvRvF_v10-07-21.max-2000x2000.jpg)
+
+---
+
+## 📋 Table of Contents
+
+1. [Where Should I Run My Stuff? (Compute Decision Guide)](#-where-should-i-run-my-stuff)
+2. [GCP Global Infrastructure](#-gcp-global-infrastructure)
+3. [GCP Full Service Map](#-gcp-full-service-map)
+4. [Compute Engine — VM Lifecycle](#️-compute-engine--vm-lifecycle)
+5. [VPC Network Architecture](#-vpc-network-architecture)
+6. [HTTP(S) Load Balancer Flow](#️-https-load-balancer-flow)
+7. [Cloud Storage — Lifecycle & Access Patterns](#-cloud-storage--lifecycle--access-patterns)
+8. [GKE Cluster Architecture](#-gke-cluster-architecture)
+9. [Cloud Run Request Flow](#-cloud-run-request-flow)
+10. [Cloud SQL — HA Architecture](#️-cloud-sql--ha-architecture)
+11. [Cloud Spanner — Global Distribution](#-cloud-spanner--global-distribution)
+12. [Cloud Functions — Event-Driven Architecture](#-cloud-functions--event-driven-architecture)
+13. [IAM — Resource Hierarchy](#-iam--resource-hierarchy)
+14. [Database Migration Service (DMS) Flow](#-database-migration-service-dms-flow)
+15. [VPN — HA VPN Between Two Projects](#-vpn--ha-vpn-between-two-projects)
+16. [Networking — Complete Request Path](#-networking--complete-request-path)
+17. [Storage Decision Guide](#-storage-decision-guide)
+18. [CI/CD Pipeline on GCP](#-cicd-pipeline-on-gcp)
+
+---
+
+## 🤔 Where Should I Run My Stuff?
+
+*Based on the [official Google Cloud decision guide](https://cloud.google.com/blog/topics/developers-practitioners/where-should-i-run-my-stuff-choosing-google-cloud-compute-option)*
+
+```mermaid
+graph TD
+    Start{{"I need to run<br/>an application"}} --> Q1{"What level of<br/>control do you need?"}
+    
+    Q1 -->|"Full control:<br/>OS, kernel, GPU,<br/>networking"| GCE["🖥️ Compute Engine<br/>Virtual Machines"]
+    Q1 -->|"Container-based"| Q2{"Need Kubernetes<br/>orchestration?"}
+    Q1 -->|"Just deploy code<br/>no infra management"| Q3{"What type<br/>of workload?"}
+    
+    Q2 -->|"Yes — microservices,<br/>multi-cloud, custom<br/>networking"| GKE["🐳 GKE<br/>Kubernetes Engine"]
+    Q2 -->|"No — just run<br/>a single container"| CR["🚀 Cloud Run<br/>Serverless Containers"]
+    
+    Q3 -->|"Web app<br/>(HTTP/HTTPS)"| Q4{"Need full app<br/>framework?"}
+    Q3 -->|"Event-driven<br/>function"| CF["⚡ Cloud Functions<br/>FaaS"]
+    
+    Q4 -->|"Yes — versioning,<br/>traffic splitting,<br/>managed platform"| GAE["📦 App Engine<br/>Managed PaaS"]
+    Q4 -->|"No — just a<br/>container"| CR
+
+    style Start fill:#EA4335,color:#fff
+    style GCE fill:#4285F4,color:#fff
+    style GKE fill:#4285F4,color:#fff
+    style CR fill:#34A853,color:#fff
+    style CF fill:#34A853,color:#fff
+    style GAE fill:#FBBC04,color:#000
+```
+
+### Compute Options Comparison
+
+| Feature | Compute Engine | GKE | Cloud Run | App Engine | Cloud Functions |
+|---------|---------------|-----|-----------|------------|-----------------|
+| **Abstraction** | IaaS (VMs) | CaaS (Containers) | Serverless Container | Serverless PaaS | Serverless FaaS |
+| **Unit of deployment** | VM image | Container (Pod) | Container image | Application code | Single function |
+| **Scaling** | Manual / MIG autoscaler | HPA + Cluster Autoscaler | Automatic (0 to N) | Automatic | Automatic (0 to N) |
+| **Scale to zero** | ❌ | ❌ (nodes always run) | ✅ | ❌ (min 1 instance) | ✅ |
+| **Startup time** | Minutes | Seconds (pod) | Seconds | Seconds | Milliseconds–seconds |
+| **Max request timeout** | Unlimited | Unlimited | 60 min | 60 min (flex) | 60 min (Gen2) |
+| **Custom OS/kernel** | ✅ | ✅ (node image) | ❌ | ❌ | ❌ |
+| **GPU support** | ✅ | ✅ | ❌ | ❌ | ❌ |
+| **Protocols** | Any | Any | HTTP/gRPC/WebSocket | HTTP | HTTP + events |
+| **Billing** | Per VM (sustained discount) | Per node (committed use) | Per request + CPU time | Per instance hour | Per invocation + CPU time |
+| **Portability** | Low (GCP VMs) | High (Kubernetes) | High (Knative) | Low | Medium (Functions Framework) |
+| **Best for** | Legacy, licensed SW, HPC | Microservices, hybrid | APIs, websites, webhooks | Web apps, mobile backends | Event processing, glue code |
+
+### Use Case Examples
+
+```mermaid
+graph LR
+    subgraph "Compute Engine"
+        CE1["Windows Server apps"]
+        CE2["SAP HANA"]
+        CE3["ML training with GPUs"]
+        CE4["Legacy migration"]
+    end
+    
+    subgraph "GKE"
+        GK1["Microservices platform"]
+        GK2["Multi-cloud workloads"]
+        GK3["CI/CD runners"]
+        GK4["Stateful applications"]
+    end
+    
+    subgraph "Cloud Run"
+        CR1["REST APIs"]
+        CR2["Websites"]
+        CR3["Webhooks"]
+        CR4["Data processing"]
+    end
+    
+    subgraph "Cloud Functions"
+        CF1["Image resize on upload"]
+        CF2["Pub/Sub processing"]
+        CF3["Scheduled jobs"]
+        CF4["IoT event handling"]
+    end
+
+    style CE1 fill:#4285F4,color:#fff
+    style CE2 fill:#4285F4,color:#fff
+    style CE3 fill:#4285F4,color:#fff
+    style CE4 fill:#4285F4,color:#fff
+    style GK1 fill:#EA4335,color:#fff
+    style GK2 fill:#EA4335,color:#fff
+    style GK3 fill:#EA4335,color:#fff
+    style GK4 fill:#EA4335,color:#fff
+    style CR1 fill:#34A853,color:#fff
+    style CR2 fill:#34A853,color:#fff
+    style CR3 fill:#34A853,color:#fff
+    style CR4 fill:#34A853,color:#fff
+    style CF1 fill:#FBBC04,color:#000
+    style CF2 fill:#FBBC04,color:#000
+    style CF3 fill:#FBBC04,color:#000
+    style CF4 fill:#FBBC04,color:#000
+```
+
 ---
 
 ## 🌐 GCP Global Infrastructure
@@ -379,3 +504,359 @@ graph TD
     style Spanner fill:#34A853,color:#fff
     style CloudSQL fill:#34A853,color:#fff
 ```
+
+---
+
+## 🗺️ GCP Full Service Map
+
+```mermaid
+graph TB
+    subgraph "Compute"
+        GCE["Compute Engine<br/>VMs"]
+        GKE_S["GKE<br/>Kubernetes"]
+        CR_S["Cloud Run<br/>Serverless Containers"]
+        GAE_S["App Engine<br/>PaaS"]
+        CF_S["Cloud Functions<br/>FaaS"]
+    end
+    
+    subgraph "Storage"
+        GCS_S["Cloud Storage<br/>Object Storage"]
+        PD["Persistent Disk<br/>Block Storage"]
+        FS["Filestore<br/>NFS"]
+    end
+    
+    subgraph "Databases"
+        SQL_S["Cloud SQL<br/>MySQL / PostgreSQL"]
+        Spanner_S["Cloud Spanner<br/>Global Relational"]
+        FS_S["Firestore<br/>NoSQL Document"]
+        BT["Bigtable<br/>Wide-column"]
+        Redis_S["Memorystore<br/>Redis Cache"]
+    end
+    
+    subgraph "Networking"
+        VPC_S["VPC<br/>Networks"]
+        LB_S["Load Balancing<br/>L4 / L7"]
+        CDN_S["Cloud CDN"]
+        DNS["Cloud DNS"]
+        VPN_S["Cloud VPN<br/>/ Interconnect"]
+        NAT_S["Cloud NAT"]
+    end
+    
+    subgraph "Data & Analytics"
+        BQ_S["BigQuery<br/>Data Warehouse"]
+        DF["Dataflow<br/>Stream / Batch"]
+        DP["Dataproc<br/>Hadoop / Spark"]
+        Composer["Cloud Composer<br/>Airflow"]
+    end
+    
+    subgraph "DevOps & CI/CD"
+        CB["Cloud Build"]
+        AR["Artifact Registry"]
+        SR["Source Repos"]
+        DM["Deploy Manager"]
+    end
+    
+    subgraph "Security & Identity"
+        IAM_S["IAM"]
+        KMS["Cloud KMS<br/>Key Management"]
+        SM["Secret Manager"]
+        Armor["Cloud Armor<br/>WAF / DDoS"]
+    end
+    
+    subgraph "Messaging"
+        PS["Pub/Sub"]
+        Tasks["Cloud Tasks"]
+        Scheduler["Cloud Scheduler"]
+    end
+    
+    subgraph "Observability"
+        Logging["Cloud Logging"]
+        Monitoring["Cloud Monitoring"]
+        Trace["Cloud Trace"]
+        Profiler["Cloud Profiler"]
+    end
+
+    style GCE fill:#4285F4,color:#fff
+    style GKE_S fill:#4285F4,color:#fff
+    style CR_S fill:#4285F4,color:#fff
+    style SQL_S fill:#34A853,color:#fff
+    style Spanner_S fill:#34A853,color:#fff
+    style BQ_S fill:#FBBC04,color:#000
+    style IAM_S fill:#EA4335,color:#fff
+    style PS fill:#EA4335,color:#fff
+    style VPC_S fill:#34A853,color:#fff
+```
+
+---
+
+## 🌍 Cloud Spanner — Global Distribution
+
+```mermaid
+graph TB
+    subgraph "Multi-Region Spanner Instance"
+        subgraph "us-central1 (Leader)"
+            S1["Split 1: Customers A-M"]
+            S2["Split 2: Customers N-Z"]
+        end
+        subgraph "us-east1 (Follower)"
+            S3["Replica: Customers A-M"]
+            S4["Replica: Customers N-Z"]
+        end
+        subgraph "europe-west1 (Follower)"
+            S5["Replica: Customers A-M"]
+            S6["Replica: Customers N-Z"]
+        end
+    end
+    
+    App_US["App (US)"] -->|"Read/Write"| S1
+    App_US -->|"Read/Write"| S2
+    App_EU["App (Europe)"] -->|"Strong Read"| S5
+    App_EU -->|"Strong Read"| S6
+    
+    S1 -.->|"TrueTime<br/>Sync"| S3
+    S1 -.->|"TrueTime<br/>Sync"| S5
+    S2 -.->|"TrueTime<br/>Sync"| S4
+    S2 -.->|"TrueTime<br/>Sync"| S6
+
+    style S1 fill:#4285F4,color:#fff
+    style S2 fill:#4285F4,color:#fff
+    style S3 fill:#34A853,color:#fff
+    style S4 fill:#34A853,color:#fff
+    style S5 fill:#FBBC04,color:#000
+    style S6 fill:#FBBC04,color:#000
+```
+
+---
+
+## ⚡ Cloud Functions — Event-Driven Architecture
+
+```mermaid
+graph TB
+    subgraph "Event Sources"
+        HTTP_E["HTTP Request"]
+        GCS_E["GCS: object.finalized"]
+        PS_E["Pub/Sub: message"]
+        FS_E["Firestore: document.write"]
+        Sched["Cloud Scheduler (cron)"]
+        Auth["Firebase Auth: user.create"]
+    end
+    
+    subgraph "Eventarc (Event Router)"
+        EA["Eventarc"]
+    end
+    
+    subgraph "Cloud Functions (Gen2)"
+        F1["processOrder()"]
+        F2["resizeImage()"]
+        F3["analyzeData()"]
+        F4["sendWelcomeEmail()"]
+        F5["generateReport()"]
+    end
+    
+    subgraph "Output"
+        DB_O["Cloud SQL"]
+        Bucket_O["GCS Bucket"]
+        Queue_O["Pub/Sub Topic"]
+        Email_O["Email Service"]
+    end
+    
+    HTTP_E --> F1
+    GCS_E --> EA --> F2
+    PS_E --> EA --> F3
+    FS_E --> EA --> F4
+    Sched -->|"HTTP trigger"| F5
+    Auth --> EA --> F4
+    
+    F1 --> DB_O
+    F2 --> Bucket_O
+    F3 --> Queue_O
+    F4 --> Email_O
+    F5 --> Bucket_O
+
+    style EA fill:#4285F4,color:#fff
+    style HTTP_E fill:#34A853,color:#fff
+    style GCS_E fill:#34A853,color:#fff
+    style PS_E fill:#34A853,color:#fff
+```
+
+---
+
+## 🌐 Networking — Complete Request Path
+
+```mermaid
+graph TB
+    User((User)) --> DNS_R["Cloud DNS<br/>Resolve domain"]
+    DNS_R --> Armor_R["Cloud Armor<br/>WAF / DDoS protection"]
+    Armor_R --> CDN_R{"Cloud CDN<br/>Cache hit?"}
+    
+    CDN_R -->|"HIT"| User
+    CDN_R -->|"MISS"| GCLB_R["Global Load Balancer<br/>HTTP(S) / TCP / SSL"]
+    
+    GCLB_R --> HealthCheck{"Health Check"}
+    
+    HealthCheck -->|"Healthy"| Backend1["Backend Service<br/>(Instance Group / NEG)"]
+    HealthCheck -->|"Unhealthy"| Backend2["Failover Backend<br/>(different region)"]
+    
+    subgraph "VPC Network"
+        Backend1 --> FW["Firewall Rules"]
+        Backend2 --> FW
+        FW --> VM_R["VM / Pod / Container"]
+        VM_R --> SQL_R["Cloud SQL<br/>(Private IP)"]
+        VM_R --> GCS_R["Cloud Storage"]
+        VM_R --> Redis_R["Memorystore"]
+    end
+    
+    VM_R -->|"Logs"| Logging_R["Cloud Logging"]
+    VM_R -->|"Metrics"| Monitoring_R["Cloud Monitoring"]
+
+    style User fill:#EA4335,color:#fff
+    style CDN_R fill:#FBBC04,color:#000
+    style GCLB_R fill:#4285F4,color:#fff
+    style Armor_R fill:#EA4335,color:#fff
+```
+
+---
+
+## 💾 Storage Decision Guide
+
+```mermaid
+graph TD
+    Q_S{{"I need to<br/>store data"}}
+    
+    Q_S -->|"Files / Objects<br/>(images, videos, backups)"| GCS_D["☁️ Cloud Storage<br/>Object storage, lifecycle mgmt"]
+    Q_S -->|"Block storage<br/>(VM disk)"| PD_D["💿 Persistent Disk<br/>SSD / Standard / Extreme"]
+    Q_S -->|"Shared filesystem<br/>(NFS)"| FS_D["📁 Filestore<br/>Managed NFS"]
+    Q_S -->|"Relational data"| Q_RD{"Global scale<br/>needed?"}
+    Q_S -->|"NoSQL data"| Q_NS{"What pattern?"}
+    Q_S -->|"Analytics<br/>(petabyte scale)"| BQ_D["📊 BigQuery<br/>Serverless data warehouse"]
+    Q_S -->|"In-memory cache"| Redis_D["⚡ Memorystore<br/>Redis / Memcached"]
+    
+    Q_RD -->|"Yes"| Spanner_D["🌍 Cloud Spanner<br/>99.999% SLA, global"]
+    Q_RD -->|"No"| SQL_D["🗄️ Cloud SQL<br/>MySQL / PostgreSQL / SQL Server"]
+    
+    Q_NS -->|"Document store"| Firestore_D["📄 Firestore<br/>Document DB"]
+    Q_NS -->|"Wide-column<br/>(IoT, time-series)"| BT_D["📈 Bigtable<br/>Low-latency, high-throughput"]
+    Q_NS -->|"Key-value"| Redis_D
+
+    style Q_S fill:#EA4335,color:#fff
+    style GCS_D fill:#4285F4,color:#fff
+    style SQL_D fill:#34A853,color:#fff
+    style Spanner_D fill:#34A853,color:#fff
+    style BQ_D fill:#FBBC04,color:#000
+```
+
+### Storage & Database Comparison
+
+| Service | Type | Best For | Capacity | Pricing Model |
+|---------|------|----------|----------|---------------|
+| Cloud Storage | Object | Files, media, backups | Unlimited | Per GB stored + operations |
+| Persistent Disk | Block | VM disks | 64 TB per disk | Per GB provisioned |
+| Filestore | File (NFS) | Shared filesystems | Up to 100 TB | Per GB provisioned |
+| Cloud SQL | Relational | Web apps, OLTP | 64 TB | Per instance hour + storage |
+| Cloud Spanner | Relational | Global, mission-critical | Unlimited | Per node + storage |
+| Firestore | Document | Mobile/web apps | Unlimited | Per read/write/delete + storage |
+| Bigtable | Wide-column | IoT, analytics, time-series | Unlimited | Per node + storage |
+| BigQuery | Analytics | Data warehouse, BI | Unlimited | Per query (TB scanned) + storage |
+| Memorystore | In-memory | Caching, sessions | Up to 300 GB | Per GB per hour |
+
+---
+
+## 🔄 CI/CD Pipeline on GCP
+
+```mermaid
+graph LR
+    Dev["Developer"] -->|"git push"| Repo["Cloud Source Repos<br/>/ GitHub"]
+    Repo -->|"Trigger"| CB["Cloud Build<br/>(Build + Test)"]
+    CB -->|"Build image"| AR_CD["Artifact Registry<br/>Container images"]
+    
+    AR_CD -->|"Deploy to staging"| CR_CD["Cloud Run<br/>(Staging)"]
+    CR_CD -->|"Approval gate"| Prod["Cloud Run<br/>(Production)"]
+    
+    CB -->|"Alt: deploy to"| GKE_CD["GKE Cluster"]
+    CB -->|"Alt: deploy to"| GAE_CD["App Engine"]
+    
+    subgraph "Observability"
+        Prod --> Log["Cloud Logging"]
+        Prod --> Mon["Cloud Monitoring"]
+        Mon -->|"Alert"| Alert["PagerDuty / Slack"]
+    end
+
+    style Dev fill:#EA4335,color:#fff
+    style CB fill:#4285F4,color:#fff
+    style AR_CD fill:#34A853,color:#fff
+    style Prod fill:#34A853,color:#fff
+```
+
+### Cloud Build Example (`cloudbuild.yaml`)
+
+```yaml
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/my-app:$SHORT_SHA', '.']
+  
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/my-app:$SHORT_SHA']
+  
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'my-service'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/my-app:$SHORT_SHA'
+      - '--region=us-central1'
+    entrypoint: gcloud
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/my-app:$SHORT_SHA'
+```
+
+---
+
+## 🏗️ Typical 3-Tier Web Application on GCP
+
+```mermaid
+graph TB
+    User2((Users)) --> CDN2["Cloud CDN"]
+    CDN2 --> LB2["Global HTTP(S)<br/>Load Balancer"]
+    
+    subgraph "Frontend Tier"
+        LB2 --> CR2_F["Cloud Run<br/>React / Next.js"]
+    end
+    
+    subgraph "Backend Tier"
+        CR2_F -->|"API calls"| GKE2["GKE / Cloud Run<br/>API Servers"]
+        GKE2 --> PS2["Pub/Sub<br/>(async tasks)"]
+        PS2 --> CF2["Cloud Functions<br/>(workers)"]
+    end
+    
+    subgraph "Data Tier"
+        GKE2 --> SQL2["Cloud SQL<br/>(PostgreSQL)"]
+        GKE2 --> Redis2["Memorystore<br/>(session cache)"]
+        CF2 --> GCS2["Cloud Storage<br/>(file uploads)"]
+        GKE2 --> GCS2
+    end
+    
+    subgraph "Observability"
+        GKE2 -.-> Log2["Logging"]
+        GKE2 -.-> Mon2["Monitoring"]
+        GKE2 -.-> Trace2["Tracing"]
+    end
+
+    style User2 fill:#EA4335,color:#fff
+    style LB2 fill:#4285F4,color:#fff
+    style SQL2 fill:#34A853,color:#fff
+    style CDN2 fill:#FBBC04,color:#000
+```
+
+---
+
+## 📚 Additional Resources
+
+- [Google Cloud Architecture Center](https://cloud.google.com/architecture)
+- [GCP Sketchnotes](https://github.com/priyankavergadia/GCPSketchnote) by Priyanka Vergadia
+- [Where Should I Run My Stuff?](https://www.youtube.com/watch?v=q_5AgiI7KFQ) (YouTube)
+- [GCP Decision Trees](https://cloud.google.com/blog/topics/developers-practitioners)
+- [Cloud Architecture Framework](https://cloud.google.com/architecture/framework)
