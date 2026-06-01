@@ -1856,3 +1856,20 @@ gcloud database-migration migration-jobs start azure-to-cloudsql \
 - [Where Should I Run My Stuff?](https://www.youtube.com/watch?v=q_5AgiI7KFQ) (YouTube)
 - [GCP Decision Trees](https://cloud.google.com/blog/topics/developers-practitioners)
 - [Cloud Architecture Framework](https://cloud.google.com/architecture/framework)
+
+---
+
+## 🔗 Deep-Dive Guides
+
+For comprehensive coverage with Mermaid diagrams, commands, and best practices, see these dedicated guides:
+
+| Guide | Topics |
+|-------|--------|
+| [Networking](../Networking/) | VPC, Firewall, Cloud NAT, Router, Interconnect, HA VPN, Shared VPC, DNS |
+| [IAM & Security](../IAM-Security/) | Resource hierarchy, roles, service accounts, KMS, Secret Manager, VPC Service Controls |
+| [Monitoring & Observability](../Monitoring/) | Cloud Monitoring, Logging, Trace, Error Reporting, Alerting, SLOs/SLIs |
+| [Data Pipelines](../DataPipeline/) | Dataflow, Pub/Sub, BigQuery, Cloud Composer, Dataproc, batch vs streaming |
+| [Cost Optimization](../CostOptimization/) | CUDs, SUDs, Spot VMs, right-sizing, billing, BigQuery cost control, FinOps |
+| [Hybrid & Multi-Cloud](../HybridMultiCloud/) | Anthos, GKE on-prem, Service Mesh, Config Management, fleet management |
+| [Serverless Patterns](../Serverless/) | Cloud Run vs Functions vs App Engine, Eventarc, Workflows, API Gateway |
+| [Migration](../Migration/) | On-Prem, AWS, Azure → GCP migration step-by-step |
