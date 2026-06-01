@@ -31,6 +31,9 @@ A curated collection of GCP command references, scripts, and step-by-step lab gu
 | [`HybridMultiCloud/`](./HybridMultiCloud/) | 🔷 **Hybrid & Multi-Cloud** — Anthos, GKE on-prem, Service Mesh, Config Management, fleet management |
 | [`Serverless/`](./Serverless/) | 🔷 **Serverless Patterns** — Cloud Run vs Functions vs App Engine, Eventarc, Workflows, API Gateway |
 | [`Database/`](./Database/) | 🔷 **Database Services** — Cloud SQL, AlloyDB, Spanner, Firestore, Bigtable, Memorystore, DMS, decision guide |
+| [`artifactory/`](./artifactory/) | Java Hello World app with Docker + Kubernetes deployment guide |
+| [`http-lb-backend-buckets-terraform/`](./http-lb-backend-buckets-terraform/) | HTTP LB with backend buckets — Terraform examples (MIG + NAT, multi-MIG) |
+| [`javamavenapp/`](./javamavenapp/) | Java Maven app with Cloud Build CI/CD pipeline |
 
 ---
 

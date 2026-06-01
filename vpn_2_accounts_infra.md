@@ -38,22 +38,34 @@ gcloud compute instances create instance-4 --zone=us-central1-b --machine-type=f
 gcloud compute addresses create network-2-static-ip --region=us-central1 --network-tier=PREMIUM
 ```
 
-## Extra subnet
+## Extra Subnet (Account 1 - Subnet C)
+
+```bash
 gcloud compute networks subnets create subnet-1c --network=network-1 --region=us-central1 --range=10.0.3.0/24
+```
 
-## Extra instance
+## Extra Instance (Account 1 - Subnet C)
+
+```bash
 gcloud compute instances create instance-extra --zone=us-central1-a --machine-type=f1-micro --subnet=subnet-1c --no-address
+```
 
+## Extra Subnet (Account 1 - Subnet D)
 
-## Extra subnet
+```bash
 gcloud compute networks subnets create subnet-1d --network=network-1 --region=us-central1 --range=10.0.4.0/24
+```
 
-## Extra instance
+## Extra Instance (BGP - Subnet D)
+
+```bash
 gcloud compute instances create instance-extra-bgp --zone=us-central1-a --machine-type=f1-micro --subnet=subnet-1d
+```
 
+## Additional Instance (BGP Extra)
 
-## new more instance
+```bash
 gcloud compute instances create instance-extra-bgp-extra --zone=us-west1-b --machine-type=f1-micro --subnet=subnet-1d
+```
 
-## Delete resources 
-
+## Delete Resources
