@@ -2,6 +2,54 @@
 
 Cloud Spanner is a fully managed, horizontally scalable, globally distributed relational database service from Google Cloud. It combines the consistency of relational databases with the scalability of NoSQL systems.
 
+## Architecture
+
+```mermaid
+graph TB
+    subgraph "Cloud Spanner Instance"
+        subgraph "Region: us-central1"
+            N1["Node 1<br/>~2000 QPS reads"]
+            N2["Node 2<br/>~2000 QPS reads"]
+            N3["Node 3<br/>~2000 QPS reads"]
+        end
+        
+        DB["Database: banking-db"]
+        T1["Table: Customer"]
+        T2["Table: Account"]
+        T3["Table: Transaction"]
+        
+        DB --> T1
+        DB --> T2
+        DB --> T3
+    end
+    
+    App1["App Server 1"] --> N1
+    App2["App Server 2"] --> N2
+    App3["App Server 3"] --> N3
+    
+    N1 ---|"Distributed<br/>Splits"| N2
+    N2 ---|"Distributed<br/>Splits"| N3
+
+    style N1 fill:#4285F4,color:#fff
+    style N2 fill:#4285F4,color:#fff
+    style N3 fill:#4285F4,color:#fff
+    style DB fill:#34A853,color:#fff
+```
+
+## Spanner vs Cloud SQL
+
+```mermaid
+graph TD
+    Q{"Choose a<br/>relational DB"}
+    Q -->|"Single region<br/>< 10TB<br/>Standard SQL"| SQL["Cloud SQL<br/>MySQL / PostgreSQL"]
+    Q -->|"Global scale<br/>Unlimited size<br/>99.999% SLA"| Spanner["Cloud Spanner"]
+    Q -->|"Multi-region writes<br/>Strong consistency"| Spanner
+    
+    style SQL fill:#4285F4,color:#fff
+    style Spanner fill:#34A853,color:#fff
+    style Q fill:#EA4335,color:#fff
+```
+
 ---
 
 ## Prerequisites

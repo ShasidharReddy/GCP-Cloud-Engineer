@@ -2,6 +2,54 @@
 
 Cloud Run is a fully managed serverless platform that runs containerized applications on Google Cloud. It automatically scales to zero and handles infrastructure management.
 
+## Architecture Overview
+
+```mermaid
+graph LR
+    Client((Client)) --> GCLB["Google Cloud<br/>Load Balancer"]
+    GCLB --> CR["Cloud Run Service"]
+    
+    subgraph "Auto-scaling (0 to N)"
+        CR --> C1["Container 1"]
+        CR --> C2["Container 2"]
+        CR --> C3["Container N..."]
+    end
+    
+    C1 --> SQL["Cloud SQL"]
+    C1 --> GCS["Cloud Storage"]
+    C2 --> PubSub["Pub/Sub"]
+    C3 --> Redis["Memorystore"]
+
+    style Client fill:#EA4335,color:#fff
+    style GCLB fill:#4285F4,color:#fff
+    style CR fill:#34A853,color:#fff
+```
+
+## Request Lifecycle
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant CR as Cloud Run
+    participant C as Container
+    
+    Client->>CR: HTTPS Request
+    
+    alt No instances running (cold start)
+        CR->>C: Pull image & start container
+        Note over C: Cold start: ~1-3s
+        C-->>CR: Ready
+    end
+    
+    CR->>C: Forward request
+    C-->>CR: Response
+    CR-->>Client: HTTPS Response
+    
+    Note over CR: No requests for idle time
+    CR->>C: Scale to zero
+    Note over CR: 💤 No cost when idle
+```
+
 ---
 
 ## Prerequisites
@@ -89,6 +137,19 @@ gcloud run deploy my-service \
 ---
 
 ## Traffic Management
+
+### Traffic Splitting — Canary Deployment
+
+```mermaid
+graph LR
+    Client((100% Traffic)) --> CR["Cloud Run<br/>Service"]
+    CR -->|"80%"| R1["Revision 1<br/>(v1 - stable)"]
+    CR -->|"20%"| R2["Revision 2<br/>(v2 - canary)"]
+    
+    style R1 fill:#34A853,color:#fff
+    style R2 fill:#FBBC04,color:#000
+    style Client fill:#EA4335,color:#fff
+```
 
 ### Deploy a New Revision Without Sending Traffic
 ```bash
