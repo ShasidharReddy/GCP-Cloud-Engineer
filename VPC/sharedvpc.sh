@@ -1,21 +1,22 @@
-#Create 3 projects dev-shared-project, prod-shared-project, host-shared-project
+#!/usr/bin/env bash
+# Shared VPC lab: Create host-network with dev, prod, and private subnets
+# Prerequisites: 3 projects — dev-shared-project, prod-shared-project, host-shared-project
 
-#To create a host-network vpc
+# Create the host-network VPC
 gcloud compute networks create host-network --subnet-mode=custom
-echo "********* Host-network created succesfully *******"
+echo "********* Host-network created successfully *******"
 
-# To Create a dev Subnet
+# Create dev subnet
 gcloud compute networks subnets create dev-subnet --range=10.0.2.0/24 \
---network=host-network --region=us-central1
-echo "********* Dev Subnet Created Succesfully ********"
+    --network=host-network --region=us-central1
+echo "********* Dev Subnet Created Successfully ********"
 
-#To Create a Private subnet
+# Create private subnet
 gcloud compute networks subnets create private-subnet --range=10.0.3.0/24 \
---network=host-network --region=us-central1
-echo "********* Private Subnet Created Succesfully ********"
+    --network=host-network --region=us-central1
+echo "********* Private Subnet Created Successfully ********"
 
-
-#To Create a Prod-subnet
+# Create prod subnet
 gcloud compute networks subnets create prod-subnet --range=10.0.1.0/24 \
---network=host-network --region=us-central1
-echo "********* Prod Subnet Created Succesfully ********"
+    --network=host-network --region=us-central1
+echo "********* Prod Subnet Created Successfully ********"

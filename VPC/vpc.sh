@@ -1,4 +1,7 @@
-#gcloud commands to create network 
+#!/usr/bin/env bash
+# Create a custom VPC with subnets and VMs
+
+# Create custom VPC
 gcloud compute networks create my-custom-network --subnet-mode=custom
 
 
