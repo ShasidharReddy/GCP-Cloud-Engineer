@@ -1,15 +1,18 @@
+#!/usr/bin/env bash
+# Create a custom VPC with firewall rules demonstrating SSH, ICMP, and tag-based deny
+
 # Create a custom-vpc
 gcloud compute networks create custom-network --subnet-mode=custom
-echo "Network Created Succefsully........"
+echo "Network Created Successfully........"
 
 # Create Subnet-a in custom-vpc
 # N/w name, cidr range, region
 gcloud compute networks subnets create subnet-a --network custom-network --region us-central1 --range 10.2.1.0/24
-echo "Subnet-a Created Succesfully......."
+echo "Subnet-a Created Successfully......."
 
 # Create subnet-b in custom-vpc
 gcloud compute networks subnets create subnet-b --network custom-network --region us-central1 --range 10.2.2.0/24
-echo "Subnet-b Created Succesfully......."
+echo "Subnet-b Created Successfully......."
 
 # Create instance-1a in subnet-a
 gcloud compute instances create instance-1a --zone us-central1-a --subnet=subnet-a --machine-type=e2-small

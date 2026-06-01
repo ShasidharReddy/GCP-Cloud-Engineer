@@ -1,4 +1,7 @@
-#gcloud commands to create network 
+#!/usr/bin/env bash
+# Create a custom VPC, subnets, and VMs (no external IP) for Cloud NAT lab
+
+# Create custom VPC
 gcloud compute networks create my-custom-network --subnet-mode=custom
 
 
