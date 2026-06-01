@@ -9,10 +9,14 @@ A curated collection of GCP command references, scripts, and step-by-step lab gu
 | Directory | Description |
 |-----------|-------------|
 | [`V2/`](./V2/) | **Latest & recommended** — structured guides for GCE, VPC, IAM, GCS, Cloud SQL, and more |
+| [`Architecture/`](./Architecture/) | 🔷 **Visual diagrams** — Mermaid flow diagrams for all major GCP services |
 | [`CDN/`](./CDN/) | Cloud CDN setup scripts and performance testing steps |
+| [`CloudFunctions/`](./CloudFunctions/) | Cloud Functions (Gen2) — HTTP, Pub/Sub, GCS triggers with Python, Node.js, Go |
+| [`CloudSQL/`](./CloudSQL/) | Cloud SQL — MySQL/PostgreSQL with HA, replicas, backups, and connection methods |
 | [`Compute/`](./Compute/) | Persistent disk operations (create, attach, resize, format) |
 | [`EncryptionKeys/`](./EncryptionKeys/) | CSEK (Customer-Supplied Encryption Key) for GCS buckets |
 | [`Examples/`](./Examples/) | Sample applications (Node.js) |
+| [`GKE/`](./GKE/) | Google Kubernetes Engine — clusters, node pools, deployments, autoscaling |
 | [`LoadBalancer/`](./LoadBalancer/) | Network LB and HTTP(S) LB setup scripts |
 | [`MemoryStore/`](./MemoryStore/) | Redis on GCP (Memorystore) setup guide |
 | [`Packer/`](./Packer/) | Packer templates for building custom GCP machine images |
@@ -58,7 +62,26 @@ A curated collection of GCP command references, scripts, and step-by-step lab gu
 
 ## 🏷️ Topics Covered
 
-`Compute Engine` · `VPC` · `Firewall` · `IAM` · `GCS` · `Cloud SQL` · `Cloud Run` · `Cloud Spanner` · `Cloud CDN` · `MemoryStore (Redis)` · `Terraform` · `Packer` · `VPN` · `Load Balancing` · `Instance Groups` · `Database Migration Service`
+`Compute Engine` · `VPC` · `Firewall` · `IAM` · `GCS` · `Cloud SQL` · `Cloud Run` · `Cloud Spanner` · `Cloud CDN` · `Cloud Functions` · `GKE (Kubernetes)` · `MemoryStore (Redis)` · `Terraform` · `Packer` · `VPN` · `Load Balancing` · `Instance Groups` · `Database Migration Service`
+
+---
+
+## 🔷 Visual Diagrams
+
+This repo includes **Mermaid flow diagrams** that render directly on GitHub — no images needed. See [`Architecture/`](./Architecture/) for:
+
+- GCP global infrastructure (regions & zones)
+- VM lifecycle state diagram
+- VPC network architecture with NAT
+- HTTP(S) Load Balancer request flow
+- GCS storage class lifecycle
+- GKE cluster architecture
+- Cloud Run auto-scaling sequence
+- Cloud SQL HA failover flow
+- IAM resource hierarchy
+- Database Migration Service flow
+- HA VPN between two projects
+- GCP services decision tree
 
 ---
 
