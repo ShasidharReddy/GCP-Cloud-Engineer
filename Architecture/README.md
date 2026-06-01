@@ -131,32 +131,176 @@ graph LR
 
 ## 🌐 GCP Global Infrastructure
 
+> Google Cloud spans **40+ regions**, **121+ zones**, and **187+ edge locations** across **200+ countries**.
+
+### Hierarchy
+
 ```mermaid
 graph TB
-    subgraph "Google Cloud Platform"
-        subgraph "Region: us-central1"
-            Z1["Zone: us-central1-a"]
-            Z2["Zone: us-central1-b"]
-            Z3["Zone: us-central1-c"]
+    subgraph "🌍 Google Cloud Global Network"
+        direction TB
+
+        subgraph "Multi-Region"
+            MR1["🇺🇸 US"]
+            MR2["🇪🇺 EU"]
+            MR3["🌏 Asia"]
         end
-        subgraph "Region: us-east1"
-            Z4["Zone: us-east1-b"]
-            Z5["Zone: us-east1-c"]
+
+        subgraph "Americas"
+            subgraph "us-central1 (Iowa)"
+                Z1["⚡ us-central1-a"]
+                Z2["⚡ us-central1-b"]
+                Z3["⚡ us-central1-c"]
+                Z4["⚡ us-central1-f"]
+            end
+            subgraph "us-east1 (S. Carolina)"
+                Z5["⚡ us-east1-b"]
+                Z6["⚡ us-east1-c"]
+                Z7["⚡ us-east1-d"]
+            end
+            subgraph "southamerica-east1 (São Paulo)"
+                Z8["⚡ southamerica-east1-a"]
+                Z9["⚡ southamerica-east1-b"]
+                Z10["⚡ southamerica-east1-c"]
+            end
         end
-        subgraph "Region: asia-south1"
-            Z6["Zone: asia-south1-a"]
-            Z7["Zone: asia-south1-b"]
+
+        subgraph "Europe"
+            subgraph "europe-west1 (Belgium)"
+                Z11["⚡ europe-west1-b"]
+                Z12["⚡ europe-west1-c"]
+                Z13["⚡ europe-west1-d"]
+            end
+            subgraph "europe-west2 (London)"
+                Z14["⚡ europe-west2-a"]
+                Z15["⚡ europe-west2-b"]
+                Z16["⚡ europe-west2-c"]
+            end
+        end
+
+        subgraph "Asia-Pacific"
+            subgraph "asia-south1 (Mumbai)"
+                Z17["⚡ asia-south1-a"]
+                Z18["⚡ asia-south1-b"]
+                Z19["⚡ asia-south1-c"]
+            end
+            subgraph "asia-east1 (Taiwan)"
+                Z20["⚡ asia-east1-a"]
+                Z21["⚡ asia-east1-b"]
+                Z22["⚡ asia-east1-c"]
+            end
+        end
+
+        subgraph "Edge Network"
+            PoP["🌐 187+ Edge PoPs"]
+            CDN_E["📦 Cloud CDN Cache"]
+            Armor["🛡️ Cloud Armor"]
         end
     end
 
+    MR1 ---|"Covers all US regions"| Z1
+    MR2 ---|"Covers all EU regions"| Z11
+    MR3 ---|"Covers all Asia regions"| Z17
+
+    PoP --> CDN_E
+    CDN_E --> Armor
+
+    style MR1 fill:#4285F4,color:#fff
+    style MR2 fill:#34A853,color:#fff
+    style MR3 fill:#FBBC04,color:#000
+    style PoP fill:#EA4335,color:#fff
+    style CDN_E fill:#EA4335,color:#fff
+    style Armor fill:#EA4335,color:#fff
     style Z1 fill:#4285F4,color:#fff
     style Z2 fill:#4285F4,color:#fff
     style Z3 fill:#4285F4,color:#fff
-    style Z4 fill:#34A853,color:#fff
-    style Z5 fill:#34A853,color:#fff
-    style Z6 fill:#FBBC04,color:#000
-    style Z7 fill:#FBBC04,color:#000
+    style Z4 fill:#4285F4,color:#fff
+    style Z5 fill:#4285F4,color:#fff
+    style Z6 fill:#4285F4,color:#fff
+    style Z7 fill:#4285F4,color:#fff
+    style Z8 fill:#4285F4,color:#fff
+    style Z9 fill:#4285F4,color:#fff
+    style Z10 fill:#4285F4,color:#fff
+    style Z11 fill:#34A853,color:#fff
+    style Z12 fill:#34A853,color:#fff
+    style Z13 fill:#34A853,color:#fff
+    style Z14 fill:#34A853,color:#fff
+    style Z15 fill:#34A853,color:#fff
+    style Z16 fill:#34A853,color:#fff
+    style Z17 fill:#FBBC04,color:#000
+    style Z18 fill:#FBBC04,color:#000
+    style Z19 fill:#FBBC04,color:#000
+    style Z20 fill:#FBBC04,color:#000
+    style Z21 fill:#FBBC04,color:#000
+    style Z22 fill:#FBBC04,color:#000
 ```
+
+### Resource Scoping
+
+```mermaid
+graph LR
+    subgraph "🔵 Global Resources"
+        VPC["VPC Networks"]
+        FW["Firewall Rules"]
+        LB["Global Load Balancers"]
+        DNS["Cloud DNS"]
+        IMG["Images & Snapshots"]
+    end
+
+    subgraph "🟢 Regional Resources"
+        SUB["Subnets"]
+        SIP["Static IPs"]
+        DISK["Regional Persistent Disks"]
+        IG["Instance Groups"]
+        NAT2["Cloud NAT"]
+    end
+
+    subgraph "🟡 Zonal Resources"
+        VM["VM Instances"]
+        ZD["Zonal Disks"]
+        GPU["GPUs / TPUs"]
+    end
+
+    VPC --> SUB --> VM
+    LB --> IG --> VM
+    SIP --> NAT2
+
+    style VPC fill:#4285F4,color:#fff
+    style FW fill:#4285F4,color:#fff
+    style LB fill:#4285F4,color:#fff
+    style DNS fill:#4285F4,color:#fff
+    style IMG fill:#4285F4,color:#fff
+    style SUB fill:#34A853,color:#fff
+    style SIP fill:#34A853,color:#fff
+    style DISK fill:#34A853,color:#fff
+    style IG fill:#34A853,color:#fff
+    style NAT2 fill:#34A853,color:#fff
+    style VM fill:#FBBC04,color:#000
+    style ZD fill:#FBBC04,color:#000
+    style GPU fill:#FBBC04,color:#000
+```
+
+### Key Numbers
+
+| Dimension | Count |
+|-----------|-------|
+| **Regions** | 40+ (across 5 continents) |
+| **Zones** | 121+ (typically 3 per region) |
+| **Edge PoPs** | 187+ worldwide |
+| **Countries** | 200+ served |
+| **Submarine Cables** | 20+ private/consortium cables |
+| **Network Capacity** | 1 Petabit/sec+ bisection bandwidth |
+| **SLA** | 99.99% (multi-zone), 99.999% (multi-region with Spanner) |
+
+### Regions at a Glance
+
+| Continent | Regions | Examples |
+|-----------|---------|----------|
+| **Americas** | 12+ | us-central1 (Iowa), us-east1 (S. Carolina), us-west1 (Oregon), southamerica-east1 (São Paulo) |
+| **Europe** | 10+ | europe-west1 (Belgium), europe-west2 (London), europe-north1 (Finland) |
+| **Asia-Pacific** | 12+ | asia-south1 (Mumbai), asia-east1 (Taiwan), asia-northeast1 (Tokyo), australia-southeast1 (Sydney) |
+| **Middle East** | 3+ | me-west1 (Tel Aviv), me-central1 (Doha), me-central2 (Dammam) |
+| **Africa** | 2+ | africa-south1 (Johannesburg), africa-south2 (Cape Town) |
 
 ---
 
