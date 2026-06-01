@@ -28,6 +28,9 @@ Visual reference diagrams for Google Cloud Platform services. All diagrams use [
 16. [Networking — Complete Request Path](#-networking--complete-request-path)
 17. [Storage Decision Guide](#-storage-decision-guide)
 18. [CI/CD Pipeline on GCP](#-cicd-pipeline-on-gcp)
+19. [3-Tier Web Application — Reference Architecture](#️-3-tier-web-application--reference-architecture)
+20. [On-Premises to GCP Migration](#-on-premises-to-gcp-migration)
+21. [AWS / Azure to GCP Migration](#-aws--azure-to-gcp-migration)
 
 ---
 
@@ -131,176 +134,360 @@ graph LR
 
 ## 🌐 GCP Global Infrastructure
 
-> Google Cloud spans **40+ regions**, **121+ zones**, and **187+ edge locations** across **200+ countries**.
+> Google Cloud spans **40+ regions**, **121+ zones**, and **187+ edge locations** across **200+ countries**, connected by one of the world's largest private networks.
 
-### Hierarchy
+### Global Network Overview
 
 ```mermaid
 graph TB
-    subgraph "🌍 Google Cloud Global Network"
+    subgraph "🌍 Google Cloud Global Network — Premium Tier"
         direction TB
 
-        subgraph "Multi-Region"
-            MR1["🇺🇸 US"]
-            MR2["🇪🇺 EU"]
-            MR3["🌏 Asia"]
+        subgraph "🔴 Edge Layer"
+            PoP["🌐 187+ Edge Points of Presence"]
+            CDN_E["📦 Cloud CDN<br/>Global Caching"]
+            Armor_E["🛡️ Cloud Armor<br/>DDoS Protection"]
+            DNS_E["📡 Cloud DNS<br/>100% SLA"]
+            PoP --> CDN_E
+            PoP --> Armor_E
+            PoP --> DNS_E
         end
 
-        subgraph "Americas"
-            subgraph "us-central1 (Iowa)"
-                Z1["⚡ us-central1-a"]
-                Z2["⚡ us-central1-b"]
-                Z3["⚡ us-central1-c"]
-                Z4["⚡ us-central1-f"]
+        subgraph "🔵 Backbone — Private Fiber + Submarine Cables"
+            Cable1["🌊 Dunant Cable<br/>US ↔ Europe<br/>250 Tbps"]
+            Cable2["🌊 Curie Cable<br/>US ↔ Chile<br/>72 Tbps"]
+            Cable3["🌊 Equiano Cable<br/>Europe ↔ Africa<br/>144 Tbps"]
+            Cable4["🌊 Grace Hopper<br/>US ↔ UK ↔ Spain<br/>340 Tbps"]
+            Cable5["🌊 Firmina Cable<br/>US ↔ Argentina/Brazil<br/>24 fiber pairs"]
+            Cable6["🌊 Blue & Raman<br/>Italy ↔ India ↔ APAC"]
+            Cable7["🌊 Topaz Cable<br/>US ↔ Japan<br/>2025"]
+        end
+
+        subgraph "🟢 Americas — 12+ Regions"
+            subgraph "🇺🇸 us-central1 — Iowa"
+                A1["⚡ us-central1-a"]
+                A2["⚡ us-central1-b"]
+                A3["⚡ us-central1-c"]
+                A4["⚡ us-central1-f"]
             end
-            subgraph "us-east1 (S. Carolina)"
-                Z5["⚡ us-east1-b"]
-                Z6["⚡ us-east1-c"]
-                Z7["⚡ us-east1-d"]
+            subgraph "🇺🇸 us-east1 — South Carolina"
+                A5["⚡ us-east1-b"]
+                A6["⚡ us-east1-c"]
+                A7["⚡ us-east1-d"]
             end
-            subgraph "southamerica-east1 (São Paulo)"
-                Z8["⚡ southamerica-east1-a"]
-                Z9["⚡ southamerica-east1-b"]
-                Z10["⚡ southamerica-east1-c"]
+            subgraph "🇺🇸 us-west1 — Oregon"
+                A8["⚡ us-west1-a"]
+                A9["⚡ us-west1-b"]
+            end
+            subgraph "🇺🇸 us-east4 — N. Virginia"
+                A10["⚡ us-east4-a"]
+                A11["⚡ us-east4-b"]
+                A12["⚡ us-east4-c"]
+            end
+            subgraph "🇧🇷 southamerica-east1 — São Paulo"
+                A13["⚡ southamerica-east1-a"]
+                A14["⚡ southamerica-east1-b"]
+                A15["⚡ southamerica-east1-c"]
+            end
+            subgraph "🇨🇦 northamerica-northeast1 — Montréal"
+                A16["⚡ northamerica-northeast1-a"]
+                A17["⚡ northamerica-northeast1-b"]
             end
         end
 
-        subgraph "Europe"
-            subgraph "europe-west1 (Belgium)"
-                Z11["⚡ europe-west1-b"]
-                Z12["⚡ europe-west1-c"]
-                Z13["⚡ europe-west1-d"]
+        subgraph "🟡 Europe — 10+ Regions"
+            subgraph "🇧🇪 europe-west1 — Belgium"
+                E1["⚡ europe-west1-b"]
+                E2["⚡ europe-west1-c"]
+                E3["⚡ europe-west1-d"]
             end
-            subgraph "europe-west2 (London)"
-                Z14["⚡ europe-west2-a"]
-                Z15["⚡ europe-west2-b"]
-                Z16["⚡ europe-west2-c"]
+            subgraph "🇬🇧 europe-west2 — London"
+                E4["⚡ europe-west2-a"]
+                E5["⚡ europe-west2-b"]
+                E6["⚡ europe-west2-c"]
+            end
+            subgraph "🇩🇪 europe-west3 — Frankfurt"
+                E7["⚡ europe-west3-a"]
+                E8["⚡ europe-west3-b"]
+                E9["⚡ europe-west3-c"]
+            end
+            subgraph "🇫🇮 europe-north1 — Finland"
+                E10["⚡ europe-north1-a"]
+                E11["⚡ europe-north1-b"]
+                E12["⚡ europe-north1-c"]
+            end
+            subgraph "🇵🇱 europe-central2 — Warsaw"
+                E13["⚡ europe-central2-a"]
+                E14["⚡ europe-central2-b"]
             end
         end
 
-        subgraph "Asia-Pacific"
-            subgraph "asia-south1 (Mumbai)"
-                Z17["⚡ asia-south1-a"]
-                Z18["⚡ asia-south1-b"]
-                Z19["⚡ asia-south1-c"]
+        subgraph "🟠 Asia-Pacific — 12+ Regions"
+            subgraph "🇮🇳 asia-south1 — Mumbai"
+                AP1["⚡ asia-south1-a"]
+                AP2["⚡ asia-south1-b"]
+                AP3["⚡ asia-south1-c"]
             end
-            subgraph "asia-east1 (Taiwan)"
-                Z20["⚡ asia-east1-a"]
-                Z21["⚡ asia-east1-b"]
-                Z22["⚡ asia-east1-c"]
+            subgraph "🇯🇵 asia-northeast1 — Tokyo"
+                AP4["⚡ asia-northeast1-a"]
+                AP5["⚡ asia-northeast1-b"]
+                AP6["⚡ asia-northeast1-c"]
+            end
+            subgraph "🇸🇬 asia-southeast1 — Singapore"
+                AP7["⚡ asia-southeast1-a"]
+                AP8["⚡ asia-southeast1-b"]
+                AP9["⚡ asia-southeast1-c"]
+            end
+            subgraph "🇹🇼 asia-east1 — Taiwan"
+                AP10["⚡ asia-east1-a"]
+                AP11["⚡ asia-east1-b"]
+                AP12["⚡ asia-east1-c"]
+            end
+            subgraph "🇦🇺 australia-southeast1 — Sydney"
+                AP13["⚡ australia-southeast1-a"]
+                AP14["⚡ australia-southeast1-b"]
+                AP15["⚡ australia-southeast1-c"]
             end
         end
 
-        subgraph "Edge Network"
-            PoP["🌐 187+ Edge PoPs"]
-            CDN_E["📦 Cloud CDN Cache"]
-            Armor["🛡️ Cloud Armor"]
+        subgraph "🟣 Middle East & Africa — 5+ Regions"
+            subgraph "🇮🇱 me-west1 — Tel Aviv"
+                MEA1["⚡ me-west1-a"]
+                MEA2["⚡ me-west1-b"]
+            end
+            subgraph "🇶🇦 me-central1 — Doha"
+                MEA3["⚡ me-central1-a"]
+                MEA4["⚡ me-central1-b"]
+            end
+            subgraph "🇸🇦 me-central2 — Dammam"
+                MEA5["⚡ me-central2-a"]
+                MEA6["⚡ me-central2-b"]
+            end
+            subgraph "🇿🇦 africa-south1 — Johannesburg"
+                MEA7["⚡ africa-south1-a"]
+                MEA8["⚡ africa-south1-b"]
+            end
         end
     end
 
-    MR1 ---|"Covers all US regions"| Z1
-    MR2 ---|"Covers all EU regions"| Z11
-    MR3 ---|"Covers all Asia regions"| Z17
+    CDN_E -->|"Ingress"| A1
+    CDN_E -->|"Ingress"| E1
+    CDN_E -->|"Ingress"| AP1
+    Cable1 ---|"US ↔ EU"| A5
+    Cable1 ---|"US ↔ EU"| E1
+    Cable2 ---|"US ↔ S.America"| A13
+    Cable3 ---|"EU ↔ Africa"| MEA7
+    Cable6 ---|"EU ↔ India ↔ APAC"| AP1
 
-    PoP --> CDN_E
-    CDN_E --> Armor
-
-    style MR1 fill:#4285F4,color:#fff
-    style MR2 fill:#34A853,color:#fff
-    style MR3 fill:#FBBC04,color:#000
     style PoP fill:#EA4335,color:#fff
     style CDN_E fill:#EA4335,color:#fff
-    style Armor fill:#EA4335,color:#fff
-    style Z1 fill:#4285F4,color:#fff
-    style Z2 fill:#4285F4,color:#fff
-    style Z3 fill:#4285F4,color:#fff
-    style Z4 fill:#4285F4,color:#fff
-    style Z5 fill:#4285F4,color:#fff
-    style Z6 fill:#4285F4,color:#fff
-    style Z7 fill:#4285F4,color:#fff
-    style Z8 fill:#4285F4,color:#fff
-    style Z9 fill:#4285F4,color:#fff
-    style Z10 fill:#4285F4,color:#fff
-    style Z11 fill:#34A853,color:#fff
-    style Z12 fill:#34A853,color:#fff
-    style Z13 fill:#34A853,color:#fff
-    style Z14 fill:#34A853,color:#fff
-    style Z15 fill:#34A853,color:#fff
-    style Z16 fill:#34A853,color:#fff
-    style Z17 fill:#FBBC04,color:#000
-    style Z18 fill:#FBBC04,color:#000
-    style Z19 fill:#FBBC04,color:#000
-    style Z20 fill:#FBBC04,color:#000
-    style Z21 fill:#FBBC04,color:#000
-    style Z22 fill:#FBBC04,color:#000
+    style Armor_E fill:#EA4335,color:#fff
+    style DNS_E fill:#EA4335,color:#fff
+    style Cable1 fill:#9C27B0,color:#fff
+    style Cable2 fill:#9C27B0,color:#fff
+    style Cable3 fill:#9C27B0,color:#fff
+    style Cable4 fill:#9C27B0,color:#fff
+    style Cable5 fill:#9C27B0,color:#fff
+    style Cable6 fill:#9C27B0,color:#fff
+    style Cable7 fill:#9C27B0,color:#fff
 ```
 
-### Resource Scoping
+### Multi-Region vs Dual-Region vs Single Region
 
 ```mermaid
 graph LR
-    subgraph "🔵 Global Resources"
+    subgraph "🔵 Multi-Region (e.g., US, EU, Asia)"
+        MR_S["GCS Multi-Regional<br/>Spanner Multi-Region<br/>BigQuery Multi-Region"]
+        MR_R1["Region 1"]
+        MR_R2["Region 2"]
+        MR_R3["Region 3+"]
+        MR_S --> MR_R1
+        MR_S --> MR_R2
+        MR_S --> MR_R3
+    end
+
+    subgraph "🟢 Dual-Region (e.g., US-EAST1+US-WEST1)"
+        DR_S["GCS Dual-Regional<br/>Turbo Replication"]
+        DR_R1["Region A"]
+        DR_R2["Region B"]
+        DR_S --> DR_R1
+        DR_S --> DR_R2
+    end
+
+    subgraph "🟡 Single Region (e.g., us-central1)"
+        SR_S["Cloud SQL HA<br/>GKE Regional<br/>Persistent Disks"]
+        SR_Z1["Zone A"]
+        SR_Z2["Zone B"]
+        SR_Z3["Zone C"]
+        SR_S --> SR_Z1
+        SR_S --> SR_Z2
+        SR_S --> SR_Z3
+    end
+
+    style MR_S fill:#4285F4,color:#fff
+    style DR_S fill:#34A853,color:#fff
+    style SR_S fill:#FBBC04,color:#000
+    style MR_R1 fill:#4285F4,color:#fff
+    style MR_R2 fill:#4285F4,color:#fff
+    style MR_R3 fill:#4285F4,color:#fff
+    style DR_R1 fill:#34A853,color:#fff
+    style DR_R2 fill:#34A853,color:#fff
+    style SR_Z1 fill:#FBBC04,color:#000
+    style SR_Z2 fill:#FBBC04,color:#000
+    style SR_Z3 fill:#FBBC04,color:#000
+```
+
+### Network Tiers — Premium vs Standard
+
+```mermaid
+graph LR
+    subgraph "⭐ Premium Tier (Default)"
+        P_U["User"] -->|"1. Request"| P_PoP["Nearest Edge PoP"]
+        P_PoP -->|"2. Google Backbone"| P_R["GCP Region"]
+        P_R -->|"3. Response via Backbone"| P_PoP
+        P_PoP -->|"4. Response"| P_U
+    end
+
+    subgraph "💰 Standard Tier (Cheaper)"
+        S_U["User"] -->|"1. Request"| S_ISP["Public Internet"]
+        S_ISP -->|"2. Enters at Region"| S_R["GCP Region"]
+        S_R -->|"3. Response via Internet"| S_ISP
+        S_ISP -->|"4. Response"| S_U
+    end
+
+    style P_U fill:#4285F4,color:#fff
+    style P_PoP fill:#34A853,color:#fff
+    style P_R fill:#4285F4,color:#fff
+    style S_U fill:#EA4335,color:#fff
+    style S_ISP fill:#FBBC04,color:#000
+    style S_R fill:#EA4335,color:#fff
+```
+
+### Resource Scoping — Global vs Regional vs Zonal
+
+```mermaid
+graph TB
+    subgraph "🔵 Global Resources — Accessible from any region"
         VPC["VPC Networks"]
         FW["Firewall Rules"]
-        LB["Global Load Balancers"]
+        GLB["Global Load Balancers"]
         DNS["Cloud DNS"]
-        IMG["Images & Snapshots"]
+        IMG["Images"]
+        SNAP["Snapshots"]
+        GCS_G["Cloud Storage Buckets"]
+        Routes["Routes"]
     end
 
-    subgraph "🟢 Regional Resources"
+    subgraph "🟢 Regional Resources — Span all zones in a region"
         SUB["Subnets"]
-        SIP["Static IPs"]
-        DISK["Regional Persistent Disks"]
-        IG["Instance Groups"]
+        SIP["Static External IPs"]
+        RD["Regional Persistent Disks"]
+        MIG["Managed Instance Groups"]
         NAT2["Cloud NAT"]
+        CSQL["Cloud SQL Instances"]
+        GKE_C["GKE Clusters"]
+        MemS["Memorystore Instances"]
+        CR["Cloud Run Services"]
     end
 
-    subgraph "🟡 Zonal Resources"
+    subgraph "🟡 Zonal Resources — Single zone only"
         VM["VM Instances"]
-        ZD["Zonal Disks"]
-        GPU["GPUs / TPUs"]
+        ZD["Zonal Persistent Disks"]
+        GPU["GPUs"]
+        TPU["TPUs"]
+        NP["GKE Node Pools"]
+        LS["Local SSDs"]
     end
 
     VPC --> SUB --> VM
-    LB --> IG --> VM
+    GLB --> MIG --> VM
+    IMG --> VM
     SIP --> NAT2
 
     style VPC fill:#4285F4,color:#fff
     style FW fill:#4285F4,color:#fff
-    style LB fill:#4285F4,color:#fff
+    style GLB fill:#4285F4,color:#fff
     style DNS fill:#4285F4,color:#fff
     style IMG fill:#4285F4,color:#fff
+    style SNAP fill:#4285F4,color:#fff
+    style GCS_G fill:#4285F4,color:#fff
+    style Routes fill:#4285F4,color:#fff
     style SUB fill:#34A853,color:#fff
     style SIP fill:#34A853,color:#fff
-    style DISK fill:#34A853,color:#fff
-    style IG fill:#34A853,color:#fff
+    style RD fill:#34A853,color:#fff
+    style MIG fill:#34A853,color:#fff
     style NAT2 fill:#34A853,color:#fff
+    style CSQL fill:#34A853,color:#fff
+    style GKE_C fill:#34A853,color:#fff
+    style MemS fill:#34A853,color:#fff
+    style CR fill:#34A853,color:#fff
     style VM fill:#FBBC04,color:#000
     style ZD fill:#FBBC04,color:#000
     style GPU fill:#FBBC04,color:#000
+    style TPU fill:#FBBC04,color:#000
+    style NP fill:#FBBC04,color:#000
+    style LS fill:#FBBC04,color:#000
 ```
 
 ### Key Numbers
 
-| Dimension | Count |
-|-----------|-------|
-| **Regions** | 40+ (across 5 continents) |
-| **Zones** | 121+ (typically 3 per region) |
-| **Edge PoPs** | 187+ worldwide |
-| **Countries** | 200+ served |
-| **Submarine Cables** | 20+ private/consortium cables |
-| **Network Capacity** | 1 Petabit/sec+ bisection bandwidth |
-| **SLA** | 99.99% (multi-zone), 99.999% (multi-region with Spanner) |
+| Dimension | Count | Details |
+|-----------|-------|---------|
+| **Regions** | 40+ | Across 5 continents |
+| **Zones** | 121+ | Typically 3 per region, some have 4 |
+| **Edge PoPs** | 187+ | Global traffic ingress |
+| **Countries** | 200+ | Served via Premium Tier |
+| **Submarine Cables** | 20+ | Private + consortium (Dunant, Curie, Equiano, Grace Hopper, Firmina, Topaz) |
+| **Network Capacity** | 1 Petabit/sec+ | Bisection bandwidth |
+| **Network SLA** | 99.99% | Premium Tier global VPC |
+| **Multi-Zone SLA** | 99.99% | Regional resources (GKE, Cloud SQL HA) |
+| **Multi-Region SLA** | 99.999% | Spanner, Multi-region GCS |
 
-### Regions at a Glance
+### All Regions Reference
 
-| Continent | Regions | Examples |
-|-----------|---------|----------|
-| **Americas** | 12+ | us-central1 (Iowa), us-east1 (S. Carolina), us-west1 (Oregon), southamerica-east1 (São Paulo) |
-| **Europe** | 10+ | europe-west1 (Belgium), europe-west2 (London), europe-north1 (Finland) |
-| **Asia-Pacific** | 12+ | asia-south1 (Mumbai), asia-east1 (Taiwan), asia-northeast1 (Tokyo), australia-southeast1 (Sydney) |
-| **Middle East** | 3+ | me-west1 (Tel Aviv), me-central1 (Doha), me-central2 (Dammam) |
-| **Africa** | 2+ | africa-south1 (Johannesburg), africa-south2 (Cape Town) |
+| Continent | Region Code | Location | Zones |
+|-----------|-------------|----------|-------|
+| **Americas** | us-central1 | Iowa, USA | a, b, c, f |
+| | us-east1 | South Carolina, USA | b, c, d |
+| | us-east4 | N. Virginia, USA | a, b, c |
+| | us-east5 | Columbus, USA | a, b, c |
+| | us-west1 | Oregon, USA | a, b |
+| | us-west2 | Los Angeles, USA | a, b, c |
+| | us-west3 | Salt Lake City, USA | a, b, c |
+| | us-west4 | Las Vegas, USA | a, b, c |
+| | us-south1 | Dallas, USA | a, b, c |
+| | northamerica-northeast1 | Montréal, Canada | a, b, c |
+| | northamerica-northeast2 | Toronto, Canada | a, b, c |
+| | southamerica-east1 | São Paulo, Brazil | a, b, c |
+| | southamerica-west1 | Santiago, Chile | a, b, c |
+| **Europe** | europe-west1 | Belgium | b, c, d |
+| | europe-west2 | London, UK | a, b, c |
+| | europe-west3 | Frankfurt, Germany | a, b, c |
+| | europe-west4 | Netherlands | a, b, c |
+| | europe-west6 | Zürich, Switzerland | a, b, c |
+| | europe-west8 | Milan, Italy | a, b, c |
+| | europe-west9 | Paris, France | a, b, c |
+| | europe-west10 | Berlin, Germany | a, b, c |
+| | europe-west12 | Turin, Italy | a, b, c |
+| | europe-north1 | Finland | a, b, c |
+| | europe-central2 | Warsaw, Poland | a, b, c |
+| | europe-southwest1 | Madrid, Spain | a, b, c |
+| **Asia-Pacific** | asia-south1 | Mumbai, India | a, b, c |
+| | asia-south2 | Delhi, India | a, b, c |
+| | asia-east1 | Taiwan | a, b, c |
+| | asia-east2 | Hong Kong | a, b, c |
+| | asia-northeast1 | Tokyo, Japan | a, b, c |
+| | asia-northeast2 | Osaka, Japan | a, b, c |
+| | asia-northeast3 | Seoul, S. Korea | a, b, c |
+| | asia-southeast1 | Singapore | a, b, c |
+| | asia-southeast2 | Jakarta, Indonesia | a, b, c |
+| | australia-southeast1 | Sydney, Australia | a, b, c |
+| | australia-southeast2 | Melbourne, Australia | a, b, c |
+| **Middle East** | me-west1 | Tel Aviv, Israel | a, b, c |
+| | me-central1 | Doha, Qatar | a, b, c |
+| | me-central2 | Dammam, Saudi Arabia | a, b, c |
+| **Africa** | africa-south1 | Johannesburg, S. Africa | a, b, c |
+| | africa-south2 | Cape Town, S. Africa | a, b, c |
 
 ---
 
@@ -994,6 +1181,671 @@ graph TB
     style SQL2 fill:#34A853,color:#fff
     style CDN2 fill:#FBBC04,color:#000
 ```
+
+---
+
+## 🏢 On-Premises to GCP Migration
+
+### Migration Journey Overview
+
+```mermaid
+graph TB
+    subgraph "Phase 1 — Assess"
+        A1["📋 Inventory Discovery<br/>Servers, apps, databases"]
+        A2["📊 TCO Analysis<br/>Current vs GCP costs"]
+        A3["🔍 Dependency Mapping<br/>App-to-app, app-to-DB"]
+        A4["📐 Fit Assessment<br/>Migrate vs Modernize vs Rebuild"]
+        A1 --> A2 --> A3 --> A4
+    end
+
+    subgraph "Phase 2 — Plan"
+        P1["🗺️ Migration Waves<br/>Group by dependency"]
+        P2["🌐 Network Design<br/>VPN / Interconnect"]
+        P3["🔐 IAM & Security<br/>Roles, policies, compliance"]
+        P4["📅 Timeline & Rollback<br/>Migration windows"]
+        P1 --> P2 --> P3 --> P4
+    end
+
+    subgraph "Phase 3 — Deploy"
+        D1["🔗 Connectivity Setup<br/>Cloud VPN / Interconnect"]
+        D2["📦 Data Transfer<br/>gsutil, Transfer Appliance"]
+        D3["🖥️ VM Migration<br/>Migrate to VMs"]
+        D4["🗄️ Database Migration<br/>DMS, import/export"]
+        D1 --> D2 --> D3 --> D4
+    end
+
+    subgraph "Phase 4 — Optimize"
+        O1["📉 Right-sizing<br/>Recommender APIs"]
+        O2["💰 Cost Optimization<br/>CUDs, Preemptible VMs"]
+        O3["📈 Monitoring<br/>Cloud Monitoring + Logging"]
+        O4["🔄 Modernize<br/>Containers, serverless"]
+        O1 --> O2 --> O3 --> O4
+    end
+
+    A4 --> P1
+    P4 --> D1
+    D4 --> O1
+
+    style A1 fill:#EA4335,color:#fff
+    style A2 fill:#EA4335,color:#fff
+    style A3 fill:#EA4335,color:#fff
+    style A4 fill:#EA4335,color:#fff
+    style P1 fill:#FBBC04,color:#000
+    style P2 fill:#FBBC04,color:#000
+    style P3 fill:#FBBC04,color:#000
+    style P4 fill:#FBBC04,color:#000
+    style D1 fill:#4285F4,color:#fff
+    style D2 fill:#4285F4,color:#fff
+    style D3 fill:#4285F4,color:#fff
+    style D4 fill:#4285F4,color:#fff
+    style O1 fill:#34A853,color:#fff
+    style O2 fill:#34A853,color:#fff
+    style O3 fill:#34A853,color:#fff
+    style O4 fill:#34A853,color:#fff
+```
+
+### Network Connectivity — On-Prem to GCP
+
+```mermaid
+graph LR
+    subgraph "🏢 On-Premises Data Center"
+        Router["🔧 On-Prem Router"]
+        FW_OP["🛡️ Firewall"]
+        Apps["📦 Applications"]
+        DB_OP["🗄️ Databases"]
+        Apps --> FW_OP --> Router
+        DB_OP --> FW_OP
+    end
+
+    subgraph "🔗 Connectivity Options"
+        VPN["🔒 Cloud VPN<br/>Encrypted tunnel<br/>Up to 3 Gbps/tunnel"]
+        DI["⚡ Dedicated Interconnect<br/>Physical connection<br/>10/100 Gbps per link"]
+        PI["🔌 Partner Interconnect<br/>Via service provider<br/>50 Mbps – 50 Gbps"]
+    end
+
+    subgraph "☁️ Google Cloud VPC"
+        CR_GCP["🌐 Cloud Router<br/>BGP dynamic routing"]
+        SUB_GCP["📡 Subnet: 10.0.0.0/16"]
+        VM_GCP["🖥️ Compute Engine VMs"]
+        GKE_GCP["☸️ GKE Clusters"]
+        SQL_GCP["🗄️ Cloud SQL"]
+        CR_GCP --> SUB_GCP
+        SUB_GCP --> VM_GCP
+        SUB_GCP --> GKE_GCP
+        SUB_GCP --> SQL_GCP
+    end
+
+    Router -->|"Option 1"| VPN
+    Router -->|"Option 2"| DI
+    Router -->|"Option 3"| PI
+    VPN --> CR_GCP
+    DI --> CR_GCP
+    PI --> CR_GCP
+
+    style VPN fill:#4285F4,color:#fff
+    style DI fill:#34A853,color:#fff
+    style PI fill:#FBBC04,color:#000
+    style CR_GCP fill:#4285F4,color:#fff
+    style Router fill:#EA4335,color:#fff
+```
+
+### VM Migration — Migrate to Virtual Machines
+
+```mermaid
+sequenceDiagram
+    participant OnPrem as 🏢 On-Prem VMs
+    participant M2VM as 🔄 Migrate to VMs
+    participant GCE as ☁️ Compute Engine
+    participant Mon as 📊 Cloud Monitoring
+
+    OnPrem->>M2VM: 1. Install Migrate connector
+    M2VM->>M2VM: 2. Discover & inventory VMs
+    M2VM->>M2VM: 3. Create migration plan
+    M2VM->>GCE: 4. Start replication (continuous)
+    Note over M2VM,GCE: Data replicates in background<br/>No downtime yet
+    M2VM->>M2VM: 5. Run test clone
+    GCE->>Mon: 6. Validate test clone
+    M2VM->>GCE: 7. Cutover (brief downtime)
+    Note over OnPrem,GCE: DNS update + final sync
+    GCE->>Mon: 8. Monitor in production
+    OnPrem-->>OnPrem: 9. Decommission after validation
+```
+
+### Database Migration Path
+
+```mermaid
+graph TB
+    subgraph "🏢 Source Databases"
+        MySQL_S["MySQL / MariaDB"]
+        PG_S["PostgreSQL"]
+        Oracle_S["Oracle"]
+        MSSQL_S["SQL Server"]
+        Mongo_S["MongoDB"]
+    end
+
+    subgraph "🔄 Migration Tools"
+        DMS["📦 Database Migration Service<br/>Continuous replication"]
+        DataFlow["🔁 Dataflow<br/>ETL pipelines"]
+        Import["📥 Native Import/Export<br/>mysqldump, pg_dump"]
+        Striim["🔄 Striim / Debezium<br/>CDC streaming"]
+    end
+
+    subgraph "☁️ GCP Target Databases"
+        CSQL_M["Cloud SQL for MySQL"]
+        CSQL_P["Cloud SQL for PostgreSQL"]
+        CSQL_S["Cloud SQL for SQL Server"]
+        Spanner["Cloud Spanner"]
+        AlloyDB["AlloyDB for PostgreSQL"]
+        Firestore["Firestore"]
+        BigTable["Cloud Bigtable"]
+    end
+
+    MySQL_S -->|"DMS"| DMS --> CSQL_M
+    PG_S -->|"DMS"| DMS --> CSQL_P
+    PG_S -->|"DMS"| DMS --> AlloyDB
+    MSSQL_S -->|"DMS"| DMS --> CSQL_S
+    Oracle_S -->|"Striim CDC"| Striim --> Spanner
+    Oracle_S -->|"Dataflow ETL"| DataFlow --> CSQL_P
+    Mongo_S -->|"Export + Import"| Import --> Firestore
+
+    style DMS fill:#4285F4,color:#fff
+    style DataFlow fill:#34A853,color:#fff
+    style Import fill:#FBBC04,color:#000
+    style Striim fill:#9C27B0,color:#fff
+    style Spanner fill:#4285F4,color:#fff
+    style AlloyDB fill:#4285F4,color:#fff
+```
+
+### Data Transfer Options
+
+```mermaid
+graph TB
+    subgraph "📊 Choose Based on Data Size"
+        Q1{"Data size?"}
+        Q1 -->|"< 1 TB"| G1["gsutil / gcloud storage cp<br/>Over internet"]
+        Q1 -->|"1–10 TB"| G2["Transfer Service<br/>Scheduled, resumable"]
+        Q1 -->|"10–100 TB"| G3["Transfer Appliance<br/>Rack-mountable device"]
+        Q1 -->|"100+ TB"| G4["Transfer Appliance (multiple)<br/>+ Dedicated Interconnect"]
+    end
+
+    style Q1 fill:#EA4335,color:#fff
+    style G1 fill:#34A853,color:#fff
+    style G2 fill:#4285F4,color:#fff
+    style G3 fill:#FBBC04,color:#000
+    style G4 fill:#9C27B0,color:#fff
+```
+
+### Migration Steps — Quick Reference
+
+#### Step 1: Set Up GCP Foundation
+
+```bash
+# Create project & enable billing
+gcloud projects create my-migration-project --name="Migration Project"
+gcloud billing projects link my-migration-project --billing-account=BILLING_ACCOUNT_ID
+
+# Enable required APIs
+gcloud services enable compute.googleapis.com \
+  vmmigration.googleapis.com \
+  datamigration.googleapis.com \
+  storage.googleapis.com \
+  cloudresourcemanager.googleapis.com
+
+# Create VPC
+gcloud compute networks create prod-vpc --subnet-mode=custom
+gcloud compute networks subnets create prod-subnet \
+  --network=prod-vpc --region=us-central1 --range=10.0.0.0/16
+```
+
+#### Step 2: Establish Connectivity
+
+```bash
+# Option A: Cloud VPN (quick setup)
+gcloud compute vpn-gateways create my-vpn-gw \
+  --network=prod-vpc --region=us-central1
+
+gcloud compute vpn-tunnels create tunnel-to-onprem \
+  --vpn-gateway=my-vpn-gw --peer-address=ON_PREM_PUBLIC_IP \
+  --shared-secret=SHARED_SECRET --region=us-central1 \
+  --ike-version=2
+
+# Option B: Dedicated Interconnect (high bandwidth)
+gcloud compute interconnects create my-interconnect \
+  --interconnect-type=DEDICATED --link-type=LINK_TYPE_ETHERNET_10G_LR \
+  --location=COLOCATION_FACILITY --requested-link-count=1
+```
+
+#### Step 3: Migrate VMs
+
+```bash
+# Create Migrate to VMs source
+gcloud migration vms sources create my-source \
+  --location=us-central1 --type=vmware \
+  --vmware-source-host=VCENTER_HOST \
+  --vmware-source-username=admin
+
+# Create & start migration
+gcloud migration vms migrating-vms create my-vm \
+  --source=my-source --location=us-central1 \
+  --source-vm-id=vm-001
+gcloud migration vms migrating-vms start-migration my-vm \
+  --source=my-source --location=us-central1
+```
+
+#### Step 4: Migrate Databases
+
+```bash
+# Create Cloud SQL target
+gcloud sql instances create prod-db \
+  --database-version=MYSQL_8_0 --tier=db-n1-standard-4 \
+  --region=us-central1 --availability-type=REGIONAL
+
+# Create DMS migration job
+gcloud database-migration migration-jobs create mysql-migration \
+  --region=us-central1 --type=CONTINUOUS \
+  --source=onprem-mysql-profile \
+  --destination=cloudsql-mysql-profile
+gcloud database-migration migration-jobs start mysql-migration \
+  --region=us-central1
+```
+
+#### Step 5: Transfer Data to GCS
+
+```bash
+# Small files — gsutil
+gsutil -m cp -r /data/files gs://my-migration-bucket/
+
+# Large datasets — Transfer Service
+gcloud transfer jobs create \
+  s3://source-bucket gs://destination-bucket \
+  --name=my-transfer-job
+
+# Verify
+gsutil ls -la gs://my-migration-bucket/
+```
+
+#### Step 6: Validate & Cutover
+
+```bash
+# Set up monitoring
+gcloud monitoring dashboards create --config-from-file=dashboard.json
+
+# Update DNS to point to GCP
+gcloud dns record-sets update app.example.com \
+  --zone=my-zone --type=A --ttl=300 \
+  --rrdatas=GCP_EXTERNAL_IP
+
+# Verify connectivity
+curl -I https://app.example.com
+```
+
+---
+
+## ☁️ AWS / Azure to GCP Migration
+
+### Multi-Cloud Migration Overview
+
+```mermaid
+graph TB
+    subgraph "📤 Source Clouds"
+        subgraph "AWS"
+            EC2["EC2 Instances"]
+            RDS["RDS Databases"]
+            S3["S3 Buckets"]
+            EKS["EKS Clusters"]
+            Lambda["Lambda Functions"]
+        end
+        subgraph "Azure"
+            AVM["Azure VMs"]
+            ASQL["Azure SQL / CosmosDB"]
+            Blob["Blob Storage"]
+            AKS["AKS Clusters"]
+            AFN["Azure Functions"]
+        end
+    end
+
+    subgraph "🔄 Migration Path"
+        M2VM2["Migrate to VMs"]
+        DMS2["Database Migration Service"]
+        STS["Storage Transfer Service"]
+        Anthos["Anthos (multi-cloud)"]
+    end
+
+    subgraph "📥 GCP Targets"
+        GCE2["Compute Engine"]
+        CSQL2["Cloud SQL / AlloyDB / Spanner"]
+        GCS2["Cloud Storage"]
+        GKE2["GKE"]
+        CR2["Cloud Run / Functions"]
+    end
+
+    EC2 --> M2VM2 --> GCE2
+    AVM --> M2VM2
+    RDS --> DMS2 --> CSQL2
+    ASQL --> DMS2
+    S3 --> STS --> GCS2
+    Blob --> STS
+    EKS --> Anthos --> GKE2
+    AKS --> Anthos
+    Lambda -.->|"Rewrite"| CR2
+    AFN -.->|"Rewrite"| CR2
+
+    style M2VM2 fill:#4285F4,color:#fff
+    style DMS2 fill:#34A853,color:#fff
+    style STS fill:#FBBC04,color:#000
+    style Anthos fill:#9C27B0,color:#fff
+```
+
+### Service Mapping — AWS to GCP
+
+| Category | AWS Service | GCP Equivalent | Migration Tool |
+|----------|-------------|----------------|----------------|
+| **Compute** | EC2 | Compute Engine | Migrate to VMs |
+| | ECS / Fargate | Cloud Run | Container rebuild |
+| | EKS | GKE | Anthos / kubectl apply |
+| | Lambda | Cloud Functions | Code rewrite |
+| | Elastic Beanstalk | App Engine | gcloud app deploy |
+| **Storage** | S3 | Cloud Storage | Storage Transfer Service |
+| | EBS | Persistent Disk | Disk export/import |
+| | EFS | Filestore | Data copy |
+| | Glacier | Archive Storage | Storage Transfer Service |
+| **Database** | RDS MySQL/PostgreSQL | Cloud SQL | Database Migration Service |
+| | RDS Oracle | Cloud SQL / Bare Metal | Striim / DMS |
+| | Aurora | AlloyDB | DMS |
+| | DynamoDB | Firestore / Bigtable | Dataflow |
+| | Redshift | BigQuery | BigQuery Data Transfer |
+| | ElastiCache | Memorystore | Export/Import |
+| **Networking** | VPC | VPC | Terraform re-create |
+| | Route 53 | Cloud DNS | Zone export/import |
+| | CloudFront | Cloud CDN | Config rewrite |
+| | ALB/NLB | Cloud Load Balancing | Terraform |
+| | Direct Connect | Dedicated Interconnect | Physical setup |
+| **Security** | IAM | Cloud IAM | Policy rewrite |
+| | KMS | Cloud KMS | Key re-create |
+| | Secrets Manager | Secret Manager | API migration |
+| | WAF | Cloud Armor | Rule rewrite |
+| **Monitoring** | CloudWatch | Cloud Monitoring | Dashboard rebuild |
+| | X-Ray | Cloud Trace | SDK swap |
+| | CloudTrail | Audit Logs | Automatic |
+| **CI/CD** | CodePipeline | Cloud Build | cloudbuild.yaml |
+| | CodeDeploy | Cloud Deploy | Config rewrite |
+| **Messaging** | SQS | Pub/Sub | Publish/Subscribe rewrite |
+| | SNS | Pub/Sub | Topic migration |
+| | EventBridge | Eventarc | Trigger rewrite |
+
+### Service Mapping — Azure to GCP
+
+| Category | Azure Service | GCP Equivalent | Migration Tool |
+|----------|---------------|----------------|----------------|
+| **Compute** | Virtual Machines | Compute Engine | Migrate to VMs |
+| | Container Instances | Cloud Run | Container rebuild |
+| | AKS | GKE | Anthos / kubectl apply |
+| | Azure Functions | Cloud Functions | Code rewrite |
+| | App Service | App Engine / Cloud Run | gcloud deploy |
+| **Storage** | Blob Storage | Cloud Storage | Storage Transfer Service |
+| | Managed Disks | Persistent Disk | Disk export/import |
+| | Azure Files | Filestore | Data copy |
+| **Database** | Azure SQL | Cloud SQL | DMS |
+| | CosmosDB | Firestore / Spanner | Dataflow |
+| | Azure Database for MySQL | Cloud SQL for MySQL | DMS |
+| | Azure Database for PostgreSQL | Cloud SQL for PostgreSQL | DMS |
+| | Azure Cache for Redis | Memorystore | Export/Import |
+| **Networking** | VNet | VPC | Terraform |
+| | Azure DNS | Cloud DNS | Zone export/import |
+| | Azure CDN | Cloud CDN | Config rewrite |
+| | Azure Load Balancer | Cloud Load Balancing | Terraform |
+| | ExpressRoute | Dedicated Interconnect | Physical setup |
+| **Security** | Azure AD | Cloud Identity / IAM | Federation |
+| | Key Vault | Secret Manager / KMS | API migration |
+| | Azure Firewall | Cloud Armor / Firewall Rules | Policy rewrite |
+| **Monitoring** | Azure Monitor | Cloud Monitoring | Dashboard rebuild |
+| | Application Insights | Cloud Trace + Logging | SDK swap |
+| **CI/CD** | Azure DevOps | Cloud Build + Cloud Deploy | Pipeline rewrite |
+| | Azure Pipelines | Cloud Build | cloudbuild.yaml |
+
+### AWS to GCP — Step-by-Step
+
+```mermaid
+sequenceDiagram
+    participant AWS as ☁️ AWS Account
+    participant Tools as 🔧 Migration Tools
+    participant GCP as ☁️ GCP Project
+
+    Note over AWS,GCP: Phase 1 — Assessment
+    AWS->>Tools: Export EC2 inventory (AWS CLI)
+    AWS->>Tools: Export RDS metadata
+    AWS->>Tools: Map security groups → firewall rules
+    Tools->>Tools: Generate migration plan
+
+    Note over AWS,GCP: Phase 2 — Foundation
+    GCP->>GCP: Create VPC, subnets, firewall rules
+    GCP->>GCP: Set up Cloud IAM policies
+    GCP->>GCP: Enable APIs & create service accounts
+
+    Note over AWS,GCP: Phase 3 — Data Migration
+    AWS->>Tools: S3 → Storage Transfer Service
+    Tools->>GCP: Data lands in Cloud Storage
+    AWS->>Tools: RDS → Database Migration Service
+    Tools->>GCP: Continuous replication to Cloud SQL
+
+    Note over AWS,GCP: Phase 4 — Compute Migration
+    AWS->>Tools: EC2 AMI export → disk images
+    Tools->>GCP: Import as Compute Engine images
+    GCP->>GCP: Create VMs from imported images
+    GCP->>GCP: Validate application functionality
+
+    Note over AWS,GCP: Phase 5 — Cutover
+    GCP->>GCP: Final data sync
+    AWS-->>GCP: DNS cutover
+    GCP->>GCP: Monitor & validate
+    AWS-->>AWS: Decommission after validation period
+```
+
+### Migration Commands — AWS to GCP
+
+#### Transfer S3 Data to GCS
+
+```bash
+# One-time transfer
+gcloud transfer jobs create \
+  s3://my-aws-bucket gs://my-gcp-bucket \
+  --source-creds-file=aws-creds.json \
+  --name=s3-to-gcs-migration
+
+# Verify transfer
+gsutil ls -la gs://my-gcp-bucket/
+
+# Set up scheduled sync (daily)
+gcloud transfer jobs create \
+  s3://my-aws-bucket gs://my-gcp-bucket \
+  --name=daily-s3-sync \
+  --schedule-starts=2024-01-01T00:00:00Z \
+  --schedule-repeats-every=P1D
+```
+
+#### Export EC2 → Import to GCE
+
+```bash
+# On AWS: Export EC2 as OVA
+aws ec2 create-instance-export-task \
+  --instance-id i-1234567890abcdef0 \
+  --target-environment vmware \
+  --export-to-s3-task file://export-config.json
+
+# Transfer OVA to GCS
+gsutil cp s3://export-bucket/my-vm.ova gs://import-bucket/
+
+# Import to Compute Engine
+gcloud compute images import my-imported-image \
+  --source-file=gs://import-bucket/my-vm.ova \
+  --os=ubuntu-2004
+
+# Create VM from imported image
+gcloud compute instances create migrated-vm \
+  --image=my-imported-image \
+  --machine-type=n2-standard-4 \
+  --zone=us-central1-a
+```
+
+#### Migrate RDS to Cloud SQL
+
+```bash
+# Create connection profile for AWS RDS
+gcloud database-migration connection-profiles create aws-rds-source \
+  --region=us-central1 \
+  --type=MYSQL \
+  --host=my-rds-instance.abc123.us-east-1.rds.amazonaws.com \
+  --port=3306 --username=admin --password=PASSWORD
+
+# Create Cloud SQL target profile
+gcloud database-migration connection-profiles create gcp-cloudsql-target \
+  --region=us-central1 --type=CLOUDSQL \
+  --cloudsql-instance=prod-mysql \
+  --tier=db-n1-standard-4
+
+# Create & start migration job
+gcloud database-migration migration-jobs create rds-to-cloudsql \
+  --region=us-central1 --type=CONTINUOUS \
+  --source=aws-rds-source \
+  --destination=gcp-cloudsql-target
+gcloud database-migration migration-jobs start rds-to-cloudsql \
+  --region=us-central1
+```
+
+### Azure to GCP — Step-by-Step
+
+```mermaid
+sequenceDiagram
+    participant Azure as ☁️ Azure Subscription
+    participant Tools as 🔧 Migration Tools
+    participant GCP as ☁️ GCP Project
+
+    Note over Azure,GCP: Phase 1 — Assessment
+    Azure->>Tools: Export VM inventory (Azure CLI)
+    Azure->>Tools: Map NSGs → GCP firewall rules
+    Azure->>Tools: Map Azure AD → Cloud IAM
+    Tools->>Tools: Generate service mapping
+
+    Note over Azure,GCP: Phase 2 — Foundation
+    GCP->>GCP: Create VPC matching VNet topology
+    GCP->>GCP: Set up Cloud Identity federation
+    GCP->>GCP: Configure equivalent firewall rules
+
+    Note over Azure,GCP: Phase 3 — Data Migration
+    Azure->>Tools: Blob Storage → Storage Transfer Service
+    Tools->>GCP: Data lands in Cloud Storage
+    Azure->>Tools: Azure SQL → DMS
+    Tools->>GCP: Continuous replication to Cloud SQL
+
+    Note over Azure,GCP: Phase 4 — Compute Migration
+    Azure->>Tools: Export VHDs from managed disks
+    Tools->>GCP: Upload VHDs → import as images
+    GCP->>GCP: Create VMs from imported images
+
+    Note over Azure,GCP: Phase 5 — Cutover
+    GCP->>GCP: Final sync + DNS switch
+    Azure-->>Azure: Decommission resources
+```
+
+### Migration Commands — Azure to GCP
+
+#### Transfer Blob Storage to GCS
+
+```bash
+# Using Storage Transfer Service with Azure credentials
+gcloud transfer jobs create \
+  https://myaccount.blob.core.windows.net/mycontainer \
+  gs://my-gcp-bucket \
+  --source-creds-file=azure-creds.json \
+  --name=azure-to-gcs-migration
+
+# Alternative: Using gsutil with Azure SAS token
+gsutil cp "https://myaccount.blob.core.windows.net/container/blob?SAS_TOKEN" \
+  gs://my-gcp-bucket/
+```
+
+#### Export Azure VM → Import to GCE
+
+```bash
+# On Azure: Export VM disk as VHD
+az disk grant-access --resource-group myRG \
+  --name myDisk --duration-in-seconds 3600 --access-level Read
+
+# Download VHD and upload to GCS
+gsutil cp ./my-azure-vm.vhd gs://import-bucket/
+
+# Import to Compute Engine
+gcloud compute images import my-azure-image \
+  --source-file=gs://import-bucket/my-azure-vm.vhd \
+  --os=windows-2019
+
+# Create VM
+gcloud compute instances create azure-migrated-vm \
+  --image=my-azure-image \
+  --machine-type=n2-standard-4 \
+  --zone=us-central1-a
+```
+
+#### Migrate Azure SQL to Cloud SQL
+
+```bash
+# Export from Azure SQL
+az sql db export --admin-password PASSWORD \
+  --admin-user admin --storage-key STORAGE_KEY \
+  --storage-key-type StorageAccessKey \
+  --storage-uri https://myaccount.blob.core.windows.net/backups/db.bacpac \
+  --name mydb --resource-group myRG --server myserver
+
+# For MySQL/PostgreSQL — use DMS
+gcloud database-migration connection-profiles create azure-sql-source \
+  --region=us-central1 --type=POSTGRESQL \
+  --host=myserver.postgres.database.azure.com \
+  --port=5432 --username=admin@myserver --password=PASSWORD
+
+gcloud database-migration migration-jobs create azure-to-cloudsql \
+  --region=us-central1 --type=CONTINUOUS \
+  --source=azure-sql-source \
+  --destination=gcp-postgresql-target
+gcloud database-migration migration-jobs start azure-to-cloudsql \
+  --region=us-central1
+```
+
+### Migration Checklist
+
+| # | Task | Phase | Status |
+|---|------|-------|--------|
+| 1 | Inventory all workloads (VMs, DBs, storage, apps) | Assess | ⬜ |
+| 2 | Map dependencies between services | Assess | ⬜ |
+| 3 | Calculate TCO — current vs GCP | Assess | ⬜ |
+| 4 | Decide migration strategy per workload (Lift & Shift / Modernize / Rebuild) | Assess | ⬜ |
+| 5 | Create GCP project hierarchy (Org → Folders → Projects) | Plan | ⬜ |
+| 6 | Design VPC network topology | Plan | ⬜ |
+| 7 | Set up IAM roles and service accounts | Plan | ⬜ |
+| 8 | Establish connectivity (VPN / Interconnect) | Deploy | ⬜ |
+| 9 | Migrate data (Storage Transfer / Transfer Appliance) | Deploy | ⬜ |
+| 10 | Migrate databases (DMS / native tools) | Deploy | ⬜ |
+| 11 | Migrate VMs (Migrate to VMs) | Deploy | ⬜ |
+| 12 | Migrate containers (GKE / Anthos) | Deploy | ⬜ |
+| 13 | Update DNS and configure load balancers | Cutover | ⬜ |
+| 14 | Validate all services end-to-end | Cutover | ⬜ |
+| 15 | Set up monitoring, alerting, and logging | Optimize | ⬜ |
+| 16 | Right-size instances using Recommender | Optimize | ⬜ |
+| 17 | Apply Committed Use Discounts (CUDs) | Optimize | ⬜ |
+| 18 | Decommission source infrastructure | Optimize | ⬜ |
+
+### Google Migration Tools Summary
+
+| Tool | Purpose | Best For |
+|------|---------|----------|
+| **Migrate to VMs** | VM migration from VMware, AWS, Azure | Lift-and-shift VMs |
+| **Database Migration Service** | Continuous database replication | MySQL, PostgreSQL, SQL Server, Oracle |
+| **Storage Transfer Service** | Cloud-to-cloud data transfer | S3, Azure Blob, HTTP sources |
+| **Transfer Appliance** | Physical device for offline transfer | 10 TB – 1 PB datasets |
+| **BigQuery Data Transfer** | Automated data ingestion to BigQuery | Redshift, Teradata, S3 |
+| **Anthos** | Multi-cloud Kubernetes management | EKS/AKS → GKE migration |
+| **Migrate to Containers** | Containerize VM workloads | Modernize legacy apps |
+| **Dataflow** | ETL/ELT pipelines | DynamoDB, custom transforms |
+| **Stratozone / StratoProbe** | Discovery and assessment | Large-scale inventory |
 
 ---
 

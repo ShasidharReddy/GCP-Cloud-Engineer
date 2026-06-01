@@ -19,6 +19,7 @@ A curated collection of GCP command references, scripts, and step-by-step lab gu
 | [`GKE/`](./GKE/) | Google Kubernetes Engine — clusters, node pools, deployments, autoscaling |
 | [`LoadBalancer/`](./LoadBalancer/) | Network LB and HTTP(S) LB setup scripts |
 | [`MemoryStore/`](./MemoryStore/) | Redis on GCP (Memorystore) setup guide |
+| [`Migration/`](./Migration/) | 🔷 **Cloud Migration** — On-Prem, AWS, Azure to GCP migration guides with step-by-step commands |
 | [`Packer/`](./Packer/) | Packer templates for building custom GCP machine images |
 | [`Terraform/`](./Terraform/) | Terraform example for VPC, subnets, and firewall on GCP |
 | [`VPC/`](./VPC/) | VPC, subnets, firewall rules, NAT, VPC peering, Shared VPC scripts |
@@ -70,7 +71,7 @@ A curated collection of GCP command references, scripts, and step-by-step lab gu
 
 This repo includes **Mermaid flow diagrams** that render directly on GitHub — no images needed. See [`Architecture/`](./Architecture/) for:
 
-- GCP global infrastructure (regions & zones)
+- GCP global infrastructure (regions, zones, submarine cables, edge network)
 - VM lifecycle state diagram
 - VPC network architecture with NAT
 - HTTP(S) Load Balancer request flow
@@ -82,6 +83,9 @@ This repo includes **Mermaid flow diagrams** that render directly on GitHub — 
 - Database Migration Service flow
 - HA VPN between two projects
 - GCP services decision tree
+- **On-Premises → GCP migration** (VM, DB, data transfer flows)
+- **AWS → GCP migration** (EC2, RDS, S3, EKS migration paths)
+- **Azure → GCP migration** (VMs, Azure SQL, Blob, AKS migration paths)
 
 ---
 
