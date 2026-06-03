@@ -75,6 +75,12 @@ graph TB
 
 ---
 
+## Deep Dive Companion
+
+- [GKE deep dive](./gke-deep-dive.md)
+
+---
+
 ## Prerequisites
 
 ```bash

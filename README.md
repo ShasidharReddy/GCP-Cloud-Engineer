@@ -1,26 +1,38 @@
 <div align="center">
 <pre>
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                                                                              │
-│    ____   ____ ____          ____ _                 _                        │
-│   / ___| / ___|  _ \        / ___| | ___  _   _  __| |                       │
-│  | |  _ | |   | |_) |_____ | |   | |/ _ \| | | |/ _` |                       │
-│  | |_| || |___|  __/|_____|| |___| | (_) | |_| | (_| |                       │
-│   \____| \____|_|            \____|_|\___/ \__,_|\__,_|                       │
-│                                                                              │
-├──────────────────────────────────────────────────────────────────────────────┤
-│  Workspace : GCP-Cloud-Engineer        Track   : Basic → Advanced            │
-│  Provider  : Google Cloud Platform     Scope   : Compute, VPC, SQL, GKE...   │
-│                                                                              │
-│  admin@gcp-cloud:~$ gcloud config list                                       │
-│  Welcome to the GCP Cloud Engineer Guide!                                    │
-└──────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                                                                      │
+│   ____  _               _        ____  ____ ____                     │
+│  / ___|| |__   __ _ ___(_)      / ___|/ ___|  _ \                   │
+│  \___ \| '_ \ / _` / __| |____ | |  _| |   | |_) |                 │
+│   ___) | | | | (_| \__ \ |____ | |_| | |___|  __/                   │
+│  |____/|_| |_|\__,_|___/_|      \____|\____|_|                      │
+│                                                                      │
+│         Comprehensive GCP Guide  —  Basic to Advanced                │
+│                                                                      │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│   Provider : Google Cloud Platform   Region  : Global                │
+│   Services : Compute, VPC, SQL...    Modules : 20+                   │
+│                                                                      │
+│   Last login: Tue Jun 3 11:19:46 2025 from github.com/ShasidharReddy │
+│                                                                      │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│   admin@shasi-gcp:~$ gcloud config list                              │
+│                                                                      │
+│   Welcome to Shasi-GCP!                                              │
+│   Your complete GCP learning environment.                            │
+│                                                                      │
+│   Type 'ls' to explore modules. Happy learning!                      │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
 </pre>
 </div>
 
-# Google Cloud Platform — Reference & Lab Notes
+# ☁️ Shasi-GCP — Comprehensive Guide (Basic → Advanced)
 
-A curated collection of GCP command references, scripts, and step-by-step lab guides covering core GCP services. Organized by topic — use this as a quick reference while working on GCP projects.
+A curated collection of GCP command references, scripts, and step-by-step lab guides for Shasi-GCP. Organized by topic — use this as a quick reference while learning, building, and operating on Google Cloud.
 
 ---
 
@@ -28,8 +40,8 @@ A curated collection of GCP command references, scripts, and step-by-step lab gu
 
 | Metric | Value |
 |--------|------:|
-| Top-level modules | 26 |
-| Topic directories with README guides | 23 |
+| Top-level modules | 27 |
+| Topic directories with README guides | 24 |
 | Workflow diagrams added in this refresh | 19 |
 | Top-level reference files | 8 |
 | Structured `V2/` learning tracks | 12+ |
@@ -41,7 +53,7 @@ A curated collection of GCP command references, scripts, and step-by-step lab gu
 
 ```mermaid
 flowchart LR
-    Repo["GCP-Cloud-Engineer"] --> Foundations
+    Repo["Shasi-GCP"] --> Foundations
     Repo --> Platform
     Repo --> Operations
     Repo --> Automation
@@ -60,6 +72,7 @@ flowchart LR
 
     subgraph Platform["Platform & Runtime Services"]
         GKE["GKE"]
+        CloudRun["CloudRun"]
         CloudFunctions["CloudFunctions"]
         CloudSQL["CloudSQL"]
         Serverless["Serverless"]
@@ -94,6 +107,7 @@ flowchart LR
     Networking --> LoadBalancer
     Database --> CloudSQL
     Serverless --> CloudFunctions
+    Serverless --> CloudRun
     DataPipeline --> Monitoring
     Hybrid --> GKE
     Terraform --> BackendLB
@@ -106,7 +120,7 @@ flowchart LR
     classDef samples fill:#ECEFF1,stroke:#546E7A,color:#263238;
     class Repo repo;
     class V2,Architecture,Compute,VPC,Networking,IAM,Database,Monitoring foundation;
-    class GKE,CloudFunctions,CloudSQL,Serverless,DataPipeline,MemoryStore,CDN,LoadBalancer platform;
+    class GKE,CloudRun,CloudFunctions,CloudSQL,Serverless,DataPipeline,MemoryStore,CDN,LoadBalancer platform;
     class Migration,Cost,Hybrid,Encryption operations;
     class Terraform,Packer,BackendLB automation;
     class ExamplesDir,Artifactory,JavaMaven samples;
@@ -122,6 +136,7 @@ flowchart LR
 | Visual reference | [`Architecture/`](./Architecture/) | 🔷 **Visual diagrams** — Mermaid flow diagrams for major GCP services, migration paths, networking, storage, IAM, and architecture decisions |
 | Edge delivery | [`CDN/`](./CDN/) | Cloud CDN setup scripts, HTTP load balancer integration, cache testing, and performance validation steps |
 | Serverless compute | [`CloudFunctions/`](./CloudFunctions/) | Cloud Functions (Gen2) — HTTP, Pub/Sub, and GCS-triggered patterns with Python, Node.js, and Go |
+| Containers on serverless | [`CloudRun/`](./CloudRun/) | Cloud Run — services, jobs, revisions, networking, Cloud SQL, Eventarc, CI/CD, and secure production operations |
 | Relational databases | [`CloudSQL/`](./CloudSQL/) | Cloud SQL — MySQL/PostgreSQL/SQL Server with HA, replicas, backups, private connectivity, and connection methods |
 | Virtual machines | [`Compute/`](./Compute/) | Persistent disk operations for Compute Engine: create, attach, resize, format, mount, and lifecycle reference |
 | Security keys | [`EncryptionKeys/`](./EncryptionKeys/) | CSEK (Customer-Supplied Encryption Key) examples and Cloud Storage encryption references |

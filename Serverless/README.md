@@ -62,6 +62,13 @@ flowchart LR
 
 ---
 
+## Related Guides
+
+- [Cloud Run deep dive](../CloudRun/README.md)
+- [Cloud Run vs Cloud Functions vs App Engine](./cloud-run-vs-functions.md)
+
+---
+
 ## Overview
 
 Google Cloud serverless services let you build APIs, event processors, schedulers, and orchestration layers without managing servers directly. The main serverless compute choices are:

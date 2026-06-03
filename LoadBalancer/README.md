@@ -64,10 +64,17 @@ LoadBalancer/
 ├── ver1/               # HTTP LB — Version 1 deployment
 │   ├── lb-startup-v1.sh  # Startup script: Apache + PHP + "VERSION 1" page
 │   └── index.php         # PHP page showing hostname and region
-└── ver2/               # HTTP LB — Version 2 deployment
-    ├── lb-startup-v2.sh  # Startup script: Apache + PHP + "VERSION 2" page
-    └── index.php         # PHP page showing hostname and region
+├── ver2/               # HTTP LB — Version 2 deployment
+│   ├── lb-startup-v2.sh  # Startup script: Apache + PHP + "VERSION 2" page
+│   └── index.php         # PHP page showing hostname and region
+└── load-balancer-real-world-scenarios.md  # Comprehensive operations guide with traffic switching scenarios
 ```
+
+## Deep-Dive Guide
+
+- [GCP Load Balancing Real-World Scenarios Guide](./load-balancer-real-world-scenarios.md)
+
+
 
 ---
 

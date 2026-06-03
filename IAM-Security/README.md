@@ -59,6 +59,12 @@ flowchart LR
 
 ---
 
+## Identity Deep Dive
+
+- [IAP and identity guide](./iap-and-identity.md)
+
+---
+
 ## IAM Resource Hierarchy
 
 ### Mermaid Diagram
