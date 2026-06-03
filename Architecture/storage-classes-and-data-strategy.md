@@ -30,17 +30,14 @@ flowchart TD
 ### Coldline
 - When to use: Very infrequent access at lower storage cost.
 - Why: Useful for quarterly archives and compliance copies where retrieval is rare but not impossible.
-- Design note: Pair storage class choice with lifecycle, retention lock, replication, and access policy decisions.
 
 ### Archive
 - When to use: Lowest storage cost for long-term retention.
 - Why: Ideal for records kept mainly for compliance and disaster recovery scenarios.
-- Design note: Pair storage class choice with lifecycle, retention lock, replication, and access policy decisions.
 
 ### Autoclass
 - When to use: Automatic class optimization based on access pattern.
 - Why: Useful when access behavior is hard to predict and teams want reduced manual lifecycle tuning.
-- Design note: Pair storage class choice with lifecycle, retention lock, replication, and access policy decisions.
 
 ## Cloud Storage Class Comparison
 | Class | Best access pattern | Strength | Watch item |
@@ -65,17 +62,14 @@ flowchart TD
 ### pd-ssd
 - When to use: High-performance SSD-backed block storage.
 - Why: Use for latency-sensitive databases and demanding application tiers.
-- Design note: Size, IOPS, and throughput are linked in different ways depending on the disk family, so model the workload rather than choosing by habit.
 
 ### pd-extreme
 - When to use: Provisioned performance for demanding database scenarios.
 - Why: Use when specific IOPS targets are required and justified by workload criticality.
-- Design note: Size, IOPS, and throughput are linked in different ways depending on the disk family, so model the workload rather than choosing by habit.
 
 ### Hyperdisk
 - When to use: Next-generation configurable performance options.
 - Why: Choose when you need flexible tuning of throughput and IOPS for modern performance-sensitive workloads.
-- Design note: Size, IOPS, and throughput are linked in different ways depending on the disk family, so model the workload rather than choosing by habit.
 
 ## Disk Selection Guidance
 - Use pd-balanced as the default unless benchmark evidence justifies moving down to pd-standard or up to pd-ssd and beyond.
@@ -154,22 +148,18 @@ volumeBindingMode: Immediate
 ### Spanner
 - When to use: Horizontally scalable globally consistent relational database.
 - Why: Choose when global scale and strong consistency across regions matter more than traditional single-instance simplicity.
-- Design note: Database choice is a data model and operations decision, not just a storage performance decision.
 
 ### Firestore
 - When to use: Document database for flexible application state.
 - Why: Best for serverless and mobile/web patterns that benefit from managed document semantics.
-- Design note: Database choice is a data model and operations decision, not just a storage performance decision.
 
 ### Bigtable
 - When to use: Wide-column database for large-scale low-latency workloads.
 - Why: Use for high-throughput time series, IoT, or profile workloads that need predictable scale.
-- Design note: Database choice is a data model and operations decision, not just a storage performance decision.
 
 ### Cloud SQL tiers
 - When to use: Right-size compute and storage by environment.
 - Why: Use smaller instances for dev and test, HA for prod, and storage autoscaling with monitoring to avoid emergency resize scenarios.
-- Design note: Database choice is a data model and operations decision, not just a storage performance decision.
 
 ## Practical Patterns
 - Store hot application assets in Standard class buckets close to consuming workloads and use lifecycle for demotion over time.

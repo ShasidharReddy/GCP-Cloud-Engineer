@@ -75,7 +75,6 @@ gcloud resource-manager folders create --display-name=nonprod --folder=APPS_FOLD
 
 ## Step 3: Apply project naming and labeling conventions
 - Why this choice: Predictable names make automation, support, and billing analysis much easier. Include function, environment, and sequence so future projects fit the pattern without debate.
-- Execution pattern: Run these commands from a platform-admin workstation or CI pipeline with organization-level permissions.
 ```bash
 gcloud projects create prj-platform-net-prod-001 --folder=PLATFORM_FOLDER_ID --name="platform-net-prod"
 gcloud projects create prj-security-core-prod-001 --folder=PLATFORM_FOLDER_ID --name="security-core-prod"
@@ -83,88 +82,65 @@ gcloud projects create prj-app-payments-prod-001 --folder=PROD_FOLDER_ID --name=
 gcloud beta resource-manager tags keys create environment --parent=organizations/ORG_ID
 gcloud beta resource-manager tags values create prod --parent=tagKeys/TAG_KEY_ID
 ```
-- Operational note: Replace placeholders such as ORG_ID, POLICY_ID, and folder IDs with values from your tenant inventory.
-- Guardrail: Capture the applied scope and approver in the same change record as the command execution.
 
 ## Step 4: Create the Shared VPC host project
 - Why this choice: Shared VPC centralizes routing, subnets, NAT, DNS, and baseline firewall controls while keeping service projects isolated for quota, IAM, and lifecycle management.
-- Execution pattern: Run these commands from a platform-admin workstation or CI pipeline with organization-level permissions.
 ```bash
 gcloud compute shared-vpc enable prj-platform-net-prod-001
 gcloud services enable compute.googleapis.com --project=prj-platform-net-prod-001
 gcloud services enable servicenetworking.googleapis.com --project=prj-platform-net-prod-001
 ```
-- Operational note: Replace placeholders such as ORG_ID, POLICY_ID, and folder IDs with values from your tenant inventory.
-- Guardrail: Capture the applied scope and approver in the same change record as the command execution.
 
 ## Step 5: Attach service projects to the host project
 - Why this choice: Service projects keep application teams independent while the platform team owns shared network resources. This reduces duplicated VPC administration and IP sprawl.
-- Execution pattern: Run these commands from a platform-admin workstation or CI pipeline with organization-level permissions.
 ```bash
 gcloud compute shared-vpc associated-projects add prj-app-payments-prod-001 --host-project=prj-platform-net-prod-001
 gcloud compute shared-vpc associated-projects add prj-app-inventory-prod-001 --host-project=prj-platform-net-prod-001
 gcloud projects add-iam-policy-binding prj-platform-net-prod-001 --member="group:network-admins@example.com" --role="roles/compute.networkAdmin"
 ```
-- Operational note: Replace placeholders such as ORG_ID, POLICY_ID, and folder IDs with values from your tenant inventory.
-- Guardrail: Capture the applied scope and approver in the same change record as the command execution.
 
 ## Step 6: Build the VPC and subnet strategy
 - Why this choice: Custom mode VPCs avoid surprise subnet creation, support deliberate IP planning, and make hybrid routing and service expansion more predictable.
-- Execution pattern: Run these commands from a platform-admin workstation or CI pipeline with organization-level permissions.
 ```bash
 gcloud compute networks create vpc-prod-core --subnet-mode=custom --project=prj-platform-net-prod-001
 gcloud compute networks subnets create snet-prod-uscentral1-app --project=prj-platform-net-prod-001 --network=vpc-prod-core --region=us-central1 --range=10.10.0.0/20 --enable-private-ip-google-access
 gcloud compute networks subnets create snet-prod-euwest1-app --project=prj-platform-net-prod-001 --network=vpc-prod-core --region=europe-west1 --range=10.20.0.0/20 --enable-private-ip-google-access
 ```
-- Operational note: Replace placeholders such as ORG_ID, POLICY_ID, and folder IDs with values from your tenant inventory.
-- Guardrail: Capture the applied scope and approver in the same change record as the command execution.
 
 ## Step 7: Add Cloud Router and Cloud NAT for controlled egress
 - Why this choice: Cloud NAT lets private workloads reach package mirrors, APIs, and patch repositories without exposing public IPs on every VM or node.
-- Execution pattern: Run these commands from a platform-admin workstation or CI pipeline with organization-level permissions.
 ```bash
 gcloud compute routers create cr-prod-uscentral1 --project=prj-platform-net-prod-001 --network=vpc-prod-core --region=us-central1
 gcloud compute routers nats create nat-prod-uscentral1 --router=cr-prod-uscentral1 --router-region=us-central1 --project=prj-platform-net-prod-001 --auto-allocate-nat-external-ips --nat-all-subnet-ip-ranges
 gcloud compute routers create cr-prod-euwest1 --project=prj-platform-net-prod-001 --network=vpc-prod-core --region=europe-west1
 gcloud compute routers nats create nat-prod-euwest1 --router=cr-prod-euwest1 --router-region=europe-west1 --project=prj-platform-net-prod-001 --auto-allocate-nat-external-ips --nat-all-subnet-ip-ranges
 ```
-- Operational note: Replace placeholders such as ORG_ID, POLICY_ID, and folder IDs with values from your tenant inventory.
-- Guardrail: Capture the applied scope and approver in the same change record as the command execution.
 
 ## Step 8: Establish hierarchical firewall policies
 - Why this choice: Hierarchical policies enforce non-negotiable rules near the top of the hierarchy. VPC-level rules still handle workload-specific needs, but central posture remains intact.
-- Execution pattern: Run these commands from a platform-admin workstation or CI pipeline with organization-level permissions.
 ```bash
 gcloud compute firewall-policies create --organization=ORG_ID --short-name=org-core-baseline
 gcloud compute firewall-policies rules create 1000 --firewall-policy=POLICY_ID --action=allow --direction=EGRESS --dest-ip-ranges=199.36.153.8/30 --layer4-configs=tcp:443
 gcloud compute firewall-policies rules create 2000 --firewall-policy=POLICY_ID --action=deny --direction=INGRESS --src-ip-ranges=0.0.0.0/0 --layer4-configs=all
 gcloud compute firewall-policies associations create --firewall-policy=POLICY_ID --organization=ORG_ID
 ```
-- Operational note: Replace placeholders such as ORG_ID, POLICY_ID, and folder IDs with values from your tenant inventory.
-- Guardrail: Capture the applied scope and approver in the same change record as the command execution.
 
 ## Step 9: Apply organization policies for secure defaults
 - Why this choice: Org policies prevent common high-risk misconfigurations globally so teams do not have to remember every control manually for every deployment.
-- Execution pattern: Run these commands from a platform-admin workstation or CI pipeline with organization-level permissions.
 ```bash
 gcloud resource-manager org-policies enable-enforce constraints/compute.requireShieldedVm --organization=ORG_ID
 gcloud resource-manager org-policies enable-enforce constraints/compute.vmExternalIpAccess --organization=ORG_ID
 gcloud resource-manager org-policies enable-enforce constraints/iam.disableServiceAccountKeyCreation --organization=ORG_ID
 gcloud resource-manager org-policies enable-enforce constraints/storage.publicAccessPrevention --organization=ORG_ID
 ```
-- Operational note: Replace placeholders such as ORG_ID, POLICY_ID, and folder IDs with values from your tenant inventory.
-- Guardrail: Capture the applied scope and approver in the same change record as the command execution.
 
 ## Step 10: Centralize logs with aggregated sinks
 - Why this choice: Aggregated sinks preserve audit and platform activity across projects. Centralized analysis simplifies incident response, compliance, and trend reporting.
-- Execution pattern: Run these commands from a platform-admin workstation or CI pipeline with organization-level permissions.
 ```bash
 gcloud logging sinks create org-audit-bq bigquery.googleapis.com/projects/prj-security-core-prod-001/datasets/org_audit --organization=ORG_ID --include-children
 gcloud logging sinks create folder-platform-archive storage.googleapis.com/prj-security-core-prod-001-log-archive --folder=PLATFORM_FOLDER_ID --include-children
 gcloud logging sinks update org-audit-bq --organization=ORG_ID --log-filter="logName:(cloudaudit.googleapis.com OR compute.googleapis.com)"
 ```
-- Operational note: Replace placeholders such as ORG_ID, POLICY_ID, and folder IDs with values from your tenant inventory.
-- Guardrail: Capture the applied scope and approver in the same change record as the command execution.
 
 ## Project Naming Standard
 - Pattern: `prj-<domain>-<service>-<environment>-<sequence>`

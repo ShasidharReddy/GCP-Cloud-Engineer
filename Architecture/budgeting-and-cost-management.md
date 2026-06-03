@@ -37,21 +37,18 @@ gcloud billing projects link prj-platform-net-prod-001 --billing-account=BILLING
 bq --location=US mk --dataset prj-finops-core:billing_export
 gcloud services enable bigquery.googleapis.com --project=prj-finops-core
 ```
-- Operational note: Use least-privilege service accounts for automation and separate prod from nonprod blast radius.
 
 ## Step 4: Enable standard and detailed export from Cloud Billing
 - Why this choice: The export configuration itself is often completed in the Billing UI, but the dataset and access model should be prepared like code-managed infrastructure.
 ```bash
 gcloud beta billing accounts update BILLING_ACCOUNT_ID --display-name="Enterprise Billing"
 ```
-- Operational note: Use least-privilege service accounts for automation and separate prod from nonprod blast radius.
 
 ## Step 5: Create budgets with thresholds
 - Why this choice: Thresholds provide early warning, not just end-of-month regret. Include both current and forecasted rules.
 ```bash
 gcloud beta billing budgets create --billing-account=BILLING_ACCOUNT_ID --display-name="prod-shared-budget" --budget-amount=5000USD --threshold-rule=percent=0.5,basis=current-spend --threshold-rule=percent=0.9,basis=forecasted-spend
 ```
-- Operational note: Use least-privilege service accounts for automation and separate prod from nonprod blast radius.
 
 ## Step 6: Publish budget notifications to Pub/Sub
 - Why this choice: Pub/Sub makes budget events machine-readable so teams can automate response rather than relying only on email.
@@ -59,21 +56,18 @@ gcloud beta billing budgets create --billing-account=BILLING_ACCOUNT_ID --displa
 gcloud pubsub topics create billing-budget-alerts --project=prj-finops-core
 gcloud beta billing budgets update BUDGET_ID --billing-account=BILLING_ACCOUNT_ID --pubsub-topic=projects/prj-finops-core/topics/billing-budget-alerts
 ```
-- Operational note: Use least-privilege service accounts for automation and separate prod from nonprod blast radius.
 
 ## Step 7: Attach an automated action service
 - Why this choice: Automation is most useful for nonprod controls such as stopping idle environments or opening incidents, not for blindly touching production.
 ```bash
 gcloud functions deploy budget-guardrail --gen2 --region=us-central1 --runtime=python312 --trigger-topic=billing-budget-alerts --entry-point=handle_budget_event --service-account=finops-automation@prj-finops-core.iam.gserviceaccount.com
 ```
-- Operational note: Use least-privilege service accounts for automation and separate prod from nonprod blast radius.
 
 ## Step 8: Review and refine monthly
 - Why this choice: FinOps is a continuous practice. Budgets without review loops quickly become background noise.
 ```bash
 bq query --use_legacy_sql=false "SELECT service.description, SUM(cost) AS total_cost FROM `prj-finops-core.billing_export.gcp_billing_export_v1_*` GROUP BY 1 ORDER BY 2 DESC LIMIT 20"
 ```
-- Operational note: Use least-privilege service accounts for automation and separate prod from nonprod blast radius.
 
 ## Example Cloud Function Automation Pattern
 - Trigger: Budget threshold event on Pub/Sub.
