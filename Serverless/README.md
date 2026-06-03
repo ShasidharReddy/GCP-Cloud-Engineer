@@ -93,15 +93,7 @@ Google Cloud serverless services let you build APIs, event processors, scheduler
 ### Serverless spectrum on GCP
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05',
-  'background': '#FFFFFF'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05', 'background': '#FFFFFF' }}}%%
 flowchart LR
     A[Client] --> B[API Gateway]
     B --> C[Cloud Run]
@@ -123,14 +115,7 @@ flowchart LR
 Use this quick decision tree first, then read the deeper sections.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 flowchart TD
     A[Need serverless compute] --> B{Container required?}
     B -->|Yes| C[Choose Cloud Run]
@@ -279,14 +264,7 @@ Event-driven architecture on GCP typically combines **Pub/Sub**, **Eventarc**, *
 ### Event flow architecture
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 sequenceDiagram
     participant Producer as Producer Service
     participant PS as Pub/Sub
@@ -350,14 +328,7 @@ Use Cloud Scheduler when you need:
 ### Sequence: scheduled processing
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 sequenceDiagram
     participant CS as Cloud Scheduler
     participant PS as Pub/Sub
@@ -428,14 +399,7 @@ Cloud Run is the most flexible GCP serverless compute option for containerized a
 ### Cloud Run lifecycle
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 flowchart TD
     A[Build container] --> B[Push to Artifact Registry]
     B --> C[Deploy Cloud Run revision]
@@ -527,14 +491,7 @@ Use cases:
 ### Example architecture
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 flowchart LR
     A[API Gateway] --> B[Cloud Run API]
     B --> C[Cloud SQL]
@@ -640,14 +597,7 @@ Cloud Functions Gen2 uses Cloud Run under the hood while preserving a function-c
 ### Trigger sequence
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 sequenceDiagram
     participant App as Producer App
     participant PS as Pub/Sub
@@ -765,14 +715,7 @@ App Engine remains useful for platform-managed application hosting.
 ### App Engine architecture view
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 flowchart TD
     A[Client] --> B[Global Load Balancing]
     B --> C[App Engine Service]
@@ -859,14 +802,7 @@ Google Cloud Workflows orchestrates services using declarative steps defined in 
 ### Workflows architecture
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 flowchart LR
     A[Eventarc or API Gateway] --> B[Workflows]
     B --> C[Cloud Run Service A]
@@ -937,14 +873,7 @@ main:
 ### Sequence example
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 sequenceDiagram
     participant Client as API Client
     participant GW as API Gateway
@@ -1006,14 +935,7 @@ API Gateway provides a managed API front door for serverless backends.
 ### API Gateway topology
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 flowchart LR
     A[Clients] --> B[API Gateway]
     B --> C[Cloud Run Orders API]
@@ -1104,14 +1026,7 @@ Serverless VPC Access connects serverless services to private resources in a VPC
 ### Connectivity flow
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 sequenceDiagram
     participant CR as Cloud Run
     participant VPC as VPC Connector
@@ -1180,14 +1095,7 @@ This section captures common distributed system patterns using GCP serverless se
 A single event is published once and consumed by multiple independent subscribers.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 flowchart LR
     A[Producer] --> B[Pub/Sub Topic]
     B --> C[Billing Consumer]
@@ -1211,14 +1119,7 @@ flowchart LR
 Services react to events rather than depending on one central orchestrator.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 sequenceDiagram
     participant O as Orders Service
     participant P as Pub/Sub
@@ -1250,14 +1151,7 @@ sequenceDiagram
 Use saga when a business transaction spans multiple services and requires compensating actions instead of a distributed ACID transaction.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'primaryColor': '#4285F4',
-  'primaryTextColor': '#FFFFFF',
-  'primaryBorderColor': '#1A73E8',
-  'lineColor': '#34A853',
-  'secondaryColor': '#EA4335',
-  'tertiaryColor': '#FBBC05'
-}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4285F4', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#1A73E8', 'lineColor': '#34A853', 'secondaryColor': '#EA4335', 'tertiaryColor': '#FBBC05' }}}%%
 sequenceDiagram
     participant WF as Workflows
     participant Inv as Inventory
@@ -1267,14 +1161,11 @@ sequenceDiagram
     WF->>Inv: Reserve inventory
     Inv-->>WF: Reserved
     WF->>Pay: Charge payment
-    alt Payment succeeded
-        Pay-->>WF: Charged
-        WF->>Ship: Create shipment
-        Ship-->>WF: Shipment created
-    else Payment failed
-        Pay-->>WF: Failed
-        WF->>Inv: Release inventory
-    end
+    Note over WF,Pay: On success, continue to shipping. On failure, trigger compensation.
+    Pay-->>WF: Charged or Failed
+    WF->>Ship: Create shipment when payment succeeds
+    Ship-->>WF: Shipment created
+    WF->>Inv: Release inventory when payment fails
 ```
 
 #### Saga implementation options
@@ -1565,3 +1456,13 @@ gcloud compute networks vpc-access connectors list --region us-central1
 ---
 
 This document is intended as a practical architecture reference for GCP serverless design reviews, implementation planning, and platform standardization.
+
+---
+
+## 📚 Official Documentation
+
+- [Cloud Run](https://cloud.google.com/run/docs)
+- [Cloud Functions](https://cloud.google.com/functions/docs)
+- [Eventarc](https://cloud.google.com/eventarc/docs)
+- [Workflows](https://cloud.google.com/workflows/docs)
+- [API Gateway](https://cloud.google.com/api-gateway/docs)

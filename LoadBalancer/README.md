@@ -241,3 +241,13 @@ gcloud compute instance-templates delete lb-template-v1 lb-template-v2 --quiet
 - [Cloud Load Balancing overview](https://cloud.google.com/load-balancing/docs/load-balancing-overview)
 - [Network LB (TCP/UDP)](https://cloud.google.com/load-balancing/docs/network)
 - [HTTP(S) LB](https://cloud.google.com/load-balancing/docs/https)
+
+---
+
+## 📚 Official Documentation
+
+- [Cloud Load Balancing overview](https://cloud.google.com/load-balancing/docs/load-balancing-overview)
+- [External Application Load Balancer](https://cloud.google.com/load-balancing/docs/https)
+- [Health checks](https://cloud.google.com/load-balancing/docs/health-check-concepts)
+- [URL maps](https://cloud.google.com/load-balancing/docs/url-map)
+- [Managed instance groups](https://cloud.google.com/compute/docs/instance-groups)

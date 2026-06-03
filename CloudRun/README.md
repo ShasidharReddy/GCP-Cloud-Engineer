@@ -1439,3 +1439,13 @@ Treating Cloud Run like a VM by keeping too much local state or performing too m
 - Which identity or policy controls this area?
 - How is this control validated after each deployment?
 - What evidence should responders collect if this area fails during an incident?
+
+---
+
+## 📚 Official Documentation
+
+- [Cloud Run](https://cloud.google.com/run/docs)
+- [Cloud Run authentication and authorization](https://cloud.google.com/run/docs/authenticating/overview)
+- [Cloud Run networking](https://cloud.google.com/run/docs/securing/ingress)
+- [Connect Cloud Run to Cloud SQL](https://cloud.google.com/sql/docs/mysql/connect-run)
+- [Cloud Run best practices](https://cloud.google.com/run/docs/tips/general)

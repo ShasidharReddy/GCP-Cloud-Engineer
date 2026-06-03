@@ -34,13 +34,9 @@ sequenceDiagram
     participant C as Container
     
     Client->>CR: HTTPS Request
-    
-    alt No instances running (cold start)
-        CR->>C: Pull image & start container
-        Note over C: Cold start: ~1-3s
-        C-->>CR: Ready
-    end
-    
+    Note over CR,C: If no warm instance exists, Cloud Run performs a cold start (~1-3s)
+    CR->>C: Pull image & start container when needed
+    C-->>CR: Ready
     CR->>C: Forward request
     C-->>CR: Response
     CR-->>Client: HTTPS Response

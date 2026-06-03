@@ -689,15 +689,10 @@ sequenceDiagram
     Note over CR: min-instances=0 (scale to zero)
     Client->>LB: HTTPS Request
     LB->>CR: Route to service
-    
-    alt No running containers (cold start)
-        CR->>C1: Start new container (~1-2s)
-        C1-->>CR: Ready
-        CR->>C1: Forward request
-    else Container available
-        CR->>C1: Forward request (warm)
-    end
-    
+    Note over CR,C1: If no warm container exists, Cloud Run starts a new container (~1-2s)
+    CR->>C1: Start or reuse container 1
+    C1-->>CR: Ready
+    CR->>C1: Forward request
     C1-->>Client: Response
     
     Note over Client: High traffic burst
@@ -790,11 +785,11 @@ sequenceDiagram
     DMS->>Source: Read all tables
     DMS->>Target: Write initial data
     
-    Note over DMS: Step 4: CDC (Change Data Capture)
-    loop Continuous replication
-        Source->>DMS: Binary log events
-        DMS->>Target: Apply changes
-    end
+    Note over DMS,Target: Step 4: Continuous CDC replication until cutover
+    Source->>DMS: Stream binary log events
+    DMS->>Target: Apply replicated changes
+    Source->>DMS: Stream incremental updates
+    DMS->>Target: Keep destination in sync
     
     Note over Target: Step 5: Promote
     DMS->>Target: Stop replication
@@ -1913,3 +1908,13 @@ For comprehensive coverage with Mermaid diagrams, commands, and best practices, 
 | [Hybrid & Multi-Cloud](../HybridMultiCloud/) | Anthos, GKE on-prem, Service Mesh, Config Management, fleet management |
 | [Serverless Patterns](../Serverless/) | Cloud Run vs Functions vs App Engine, Eventarc, Workflows, API Gateway |
 | [Migration](../Migration/) | On-Prem, AWS, Azure → GCP migration step-by-step |
+
+---
+
+## 📚 Official Documentation
+
+- [Google Cloud Architecture Center](https://cloud.google.com/architecture)
+- [Google Cloud Architecture Framework](https://cloud.google.com/architecture/framework)
+- [Compute Engine](https://cloud.google.com/compute/docs)
+- [VPC](https://cloud.google.com/vpc/docs)
+- [IAM](https://cloud.google.com/iam/docs)

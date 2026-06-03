@@ -563,13 +563,11 @@ sequenceDiagram
     Proxy->>Map: Evaluate routing rules
     Map->>BES: Choose default backend service
     BES->>HC: Confirm healthy backends
-    alt VM1 chosen
-        BES->>VM1: Proxy request to port 80
-        VM1-->>User: HTML response
-    else VM2 chosen
-        BES->>VM2: Proxy request to port 80
-        VM2-->>User: HTML response
-    end
+    Note over BES,VM2: Backend service selects one healthy VM
+    BES->>VM1: Proxy request to port 80 when VM1 is selected
+    VM1-->>User: HTML response
+    BES->>VM2: Proxy request to port 80 when VM2 is selected
+    VM2-->>User: HTML response
 ```
 
 ## 2.15 Complete Terraform Example
