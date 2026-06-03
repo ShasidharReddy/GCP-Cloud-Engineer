@@ -1,6 +1,44 @@
 # GCP Data Pipeline Reference
 
 > Comprehensive reference for common Google Cloud data engineering patterns using Dataflow, Pub/Sub, BigQuery, Cloud Composer, Dataproc, and Data Fusion.
+<!-- workflow-diagram:start -->
+## Data Pipeline Workflow
+```mermaid
+flowchart LR
+    Sources["Apps, files, databases, streams"] --> Ingest{"Batch or streaming?"}
+    subgraph Ingestion["Ingestion layer"]
+        PubSub["Pub/Sub"]
+        Transfer["Storage Transfer / DMS"]
+        Composer["Cloud Composer"]
+    end
+    Ingest -->|Streaming| PubSub
+    Ingest -->|Batch| Transfer
+    Transfer --> Composer
+    PubSub --> Process["Dataflow / Dataproc"]
+    Composer --> Process
+    Process --> Quality["Validate schema + quality"]
+    Quality --> Store{"Target platform?"}
+    Store -->|Analytics| BigQuery["BigQuery"]
+    Store -->|Lakehouse| GCS["Cloud Storage"]
+    Store -->|Serving| Feature["Operational sink / serving"]
+    BigQuery --> Observe["Monitoring + lineage"]
+    GCS --> Observe
+    Feature --> Observe
+    Observe --> Healthy{"Pipeline healthy?"}
+    Healthy -->|No| Tune["Replay, scale, or fix transforms"]
+    Tune --> Process
+    Healthy -->|Yes| Consume["Dashboards / ML / apps"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef ingest fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef data fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Sources,Ingest start;
+    class PubSub,Transfer,Composer,Process,Quality ingest;
+    class Store,BigQuery,GCS,Feature,Observe,Healthy,Tune data;
+    class Consume finish;
+```
+<!-- workflow-diagram:end -->
+
 
 ---
 

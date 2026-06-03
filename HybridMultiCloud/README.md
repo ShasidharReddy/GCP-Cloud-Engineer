@@ -2,6 +2,42 @@
 
 > A comprehensive reference for designing, operating, and scaling Google Cloud hybrid and multi-cloud platforms with Anthos, GKE on-prem, service mesh, interconnectivity, migration, and fleet management.
 
+<!-- workflow-diagram:start -->
+## Hybrid Connectivity Workflow
+```mermaid
+flowchart LR
+    Estates["On-Prem / AWS / Azure"] --> Connect{"VPN or Interconnect?"}
+    Connect -->|VPN| VPN["HA VPN"]
+    Connect -->|Dedicated| Interconnect["Cloud Interconnect"]
+    subgraph Control["Hybrid control plane"]
+        Fleet["Anthos fleet"]
+        Policy["Config Management"]
+        Mesh["Service Mesh"]
+    end
+    VPN --> Fleet
+    Interconnect --> Fleet
+    Fleet --> Policy
+    Policy --> Mesh
+    Mesh --> Deploy["Deploy apps across environments"]
+    Deploy --> Observe["Unified logging + monitoring"]
+    Observe --> Secure{"Policies compliant?"}
+    Secure -->|No| Remediate["Drift fix / policy enforcement"]
+    Remediate --> Policy
+    Secure -->|Yes| Failover{"Need failover or burst?"}
+    Failover -->|Yes| Shift["Move traffic / workloads"]
+    Failover -->|No| Operate["Operate steady-state fleet"]
+    Shift --> Operate
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef hybrid fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef ops fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Estates,Connect start;
+    class VPN,Interconnect,Fleet,Policy,Mesh,Deploy hybrid;
+    class Observe,Secure,Remediate,Failover,Shift ops;
+    class Operate finish;
+```
+<!-- workflow-diagram:end -->
+
 ## Table of Contents
 
 1. [Document Goals](#document-goals)

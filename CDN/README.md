@@ -1,6 +1,40 @@
 # Cloud CDN — Setup, Testing & Scripts
 
 This directory contains scripts to set up a full Cloud CDN environment on Google Cloud: firewall rules, instance template, managed instance group, HTTP load balancer, backend service, and a test VM.
+<!-- workflow-diagram:start -->
+## CDN Content Delivery Workflow
+```mermaid
+flowchart LR
+    User["User request"] --> DNS["DNS resolves LB"]
+    DNS --> Edge["Google edge POP"]
+    Edge --> Cache{"Cache hit?"}
+    Cache -->|Yes| Serve["Return cached content"]
+    Cache -->|No| LB["HTTP(S) Load Balancer"]
+    subgraph Origin["Origin path"]
+        Backend["Backend service / bucket"]
+        Health["Health checks"]
+        Fill["Cache fill response"]
+    end
+    LB --> Backend
+    Backend --> Health
+    Health --> Fill
+    Fill --> Serve
+    Serve --> Observe["Latency + cache metrics"]
+    Observe --> Tune{"Need invalidation or TTL tuning?"}
+    Tune -->|Yes| Invalidate["Invalidate cache / adjust policy"]
+    Invalidate --> Edge
+    Tune -->|No| Stable["Optimized content delivery"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef edge fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef ops fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class User,DNS,Edge,Cache start;
+    class Serve,LB,Backend,Health,Fill edge;
+    class Observe,Tune,Invalidate ops;
+    class Stable finish;
+```
+<!-- workflow-diagram:end -->
+
 
 ---
 

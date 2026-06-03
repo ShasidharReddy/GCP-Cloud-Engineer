@@ -1,6 +1,43 @@
 # Load Balancer — GCP Load Balancing Scripts
 
 This directory contains startup scripts and static pages for setting up HTTP(S) and Network load balancers on Google Cloud.
+<!-- workflow-diagram:start -->
+## Load Balancing Workflow
+```mermaid
+flowchart LR
+    Client["Client request"] --> DNS["Cloud DNS / public IP"]
+    DNS --> Frontend["Forwarding rule + frontend"]
+    Frontend --> Type{"HTTP(S) or TCP/UDP?"}
+    subgraph TrafficPath["Traffic path"]
+        URLMap["URL map / target proxy"]
+        BackendSvc["Backend service"]
+        Health["Health checks"]
+        Backends["MIG / NEG / instances"]
+    end
+    Type -->|HTTP(S)| URLMap
+    Type -->|TCP/UDP| BackendSvc
+    URLMap --> BackendSvc
+    BackendSvc --> Health
+    Health --> Backends
+    Backends --> Result{"Healthy backend available?"}
+    Result -->|No| Drain["Fail over or drain traffic"]
+    Drain --> Health
+    Result -->|Yes| Edge["Optional Cloud CDN / Armor"]
+    Edge --> Observe["Latency + error monitoring"]
+    Observe --> Tune{"Need routing changes?"}
+    Tune -->|Yes| URLMap
+    Tune -->|No| Serve["Serve production traffic"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef lb fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef ops fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Client,DNS,Frontend,Type start;
+    class URLMap,BackendSvc,Health,Backends,Edge lb;
+    class Result,Drain,Observe,Tune ops;
+    class Serve finish;
+```
+<!-- workflow-diagram:end -->
+
 
 ---
 

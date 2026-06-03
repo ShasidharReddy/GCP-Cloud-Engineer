@@ -1,6 +1,44 @@
 # GCP Serverless Architecture Patterns
 
 > Comprehensive reference for designing, deploying, and operating serverless workloads on Google Cloud Platform (GCP).
+<!-- workflow-diagram:start -->
+## Serverless Architecture Workflow
+```mermaid
+flowchart LR
+    Entry["Client request or event"] --> Decide{"Synchronous or asynchronous?"}
+    subgraph FrontDoor["Ingress layer"]
+        APIGW["API Gateway"]
+        Eventarc["Eventarc"]
+        Scheduler["Cloud Scheduler"]
+    end
+    Decide -->|Sync| APIGW
+    Decide -->|Async| Eventarc
+    Decide -->|Scheduled| Scheduler
+    APIGW --> Platform{"Best runtime?"}
+    Eventarc --> Platform
+    Scheduler --> Platform
+    Platform -->|Containerized| Run["Cloud Run"]
+    Platform -->|Single-purpose| Func["Cloud Functions"]
+    Platform -->|Legacy web| AppEngine["App Engine"]
+    Run --> Orchestrate["Workflows / PubSub / Tasks"]
+    Func --> Orchestrate
+    AppEngine --> Orchestrate
+    Orchestrate --> Secure["IAM + secrets + VPC access"]
+    Secure --> Observe{"SLO / cost acceptable?"}
+    Observe -->|No| Tune["Adjust runtime, min instances, or triggers"]
+    Tune --> Platform
+    Observe -->|Yes| Release["Operate serverless app"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef ingress fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef platform fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Entry,Decide,Platform start;
+    class APIGW,Eventarc,Scheduler ingress;
+    class Run,Func,AppEngine,Orchestrate,Secure,Observe,Tune platform;
+    class Release finish;
+```
+<!-- workflow-diagram:end -->
+
 
 ---
 

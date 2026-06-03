@@ -4,6 +4,49 @@
 
 This document is the **central database guide** for the repository. It complements deeper service-specific notes such as [Cloud SQL](../CloudSQL/), [Cloud Spanner](../cloud_spanner.md), [Memorystore](../MemoryStore/), [Database Migration Service](../database_migration.md), and [Data Pipeline / BigQuery](../DataPipeline/).
 
+<!-- workflow-diagram:start -->
+## Database Selection & Connection Workflow
+```mermaid
+flowchart LR
+    Need["Workload requirements"] --> Model{"SQL, NoSQL, or analytics?"}
+    subgraph Relational["Relational options"]
+        CloudSQL["Cloud SQL"]
+        AlloyDB["AlloyDB"]
+        Spanner["Spanner"]
+    end
+    subgraph NonRelational["Non-relational options"]
+        Firestore["Firestore"]
+        Bigtable["Bigtable"]
+        BQ["BigQuery"]
+    end
+    Model -->|Transactional SQL| CloudSQL
+    Model -->|High-throughput SQL| AlloyDB
+    Model -->|Global consistency| Spanner
+    Model -->|Document / key-value| Firestore
+    Model -->|Wide-column| Bigtable
+    Model -->|Warehouse / analytics| BQ
+    CloudSQL --> Connect["Private IP / connector / proxy"]
+    AlloyDB --> Connect
+    Spanner --> Connect
+    Firestore --> Connect
+    Bigtable --> Connect
+    BQ --> Connect
+    Connect --> Secure{"Networking + IAM aligned?"}
+    Secure -->|No| Refine["Adjust VPC, IAM, or schema choice"]
+    Refine --> Model
+    Secure -->|Yes| Operate["Backups, monitoring, and scaling"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef relational fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef nonrel fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Need,Model,Connect start;
+    class CloudSQL,AlloyDB,Spanner relational;
+    class Firestore,Bigtable,BQ nonrel;
+    class Secure,Refine,Operate finish;
+```
+<!-- workflow-diagram:end -->
+
+
 ---
 
 ## Table of Contents

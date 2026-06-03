@@ -1,6 +1,48 @@
 # GCP Networking
 
 > Comprehensive notes-based guide to core Google Cloud Platform (GCP) networking concepts, design patterns, and operational commands.
+<!-- workflow-diagram:start -->
+## Networking Workflow Overview
+```mermaid
+flowchart LR
+    Intake["Application traffic"] --> Design["Design VPC topology"]
+    Design --> Subnets["Define regional subnets"]
+    Subnets --> Route{"Need external access?"}
+    subgraph Workloads["Attached workloads"]
+        VM["Compute Engine"]
+        GKE["GKE / containers"]
+        SRV["Serverless connector"]
+    end
+    subgraph Controls["Traffic controls"]
+        FW["Firewall rules"]
+        RT["Custom routes"]
+        DNS["Cloud DNS"]
+        Edge["NAT / VPN / Interconnect / LB"]
+    end
+    Route -->|Yes| Edge
+    Route -->|No| FW
+    VM --> FW
+    GKE --> FW
+    SRV --> FW
+    FW --> RT
+    RT --> DNS
+    DNS --> Observe["Logs + Flow visibility"]
+    Edge --> Observe
+    Observe --> Healthy{"Reachability OK?"}
+    Healthy -->|No| Tune["Adjust CIDR, routes, or rules"]
+    Tune --> Subnets
+    Healthy -->|Yes| Ready["Publish production path"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef platform fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef control fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Intake,Design,Subnets start;
+    class VM,GKE,SRV platform;
+    class FW,RT,DNS,Edge,Observe,Healthy,Tune control;
+    class Ready finish;
+```
+<!-- workflow-diagram:end -->
+
 
 ---
 

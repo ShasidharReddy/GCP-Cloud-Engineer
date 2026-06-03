@@ -1,5 +1,42 @@
 # Google Kubernetes Engine (GKE) — Complete Guide
 
+<!-- workflow-diagram:start -->
+## GKE Cluster Lifecycle Workflow
+```mermaid
+flowchart LR
+    Plan["Platform requirements"] --> Mode{"Autopilot or Standard?"}
+    subgraph Build["Cluster build"]
+        Cluster["Create cluster"]
+        Pools["Define node pools"]
+        Network["Configure VPC-native networking"]
+        Policy["Enable IAM, RBAC, policy"]
+    end
+    Mode --> Cluster
+    Cluster --> Pools
+    Pools --> Network
+    Network --> Policy
+    Policy --> Deploy["Deploy workloads"]
+    Deploy --> Health{"Healthy rollout?"}
+    Health -->|No| Rollback["Rollback / tune resources"]
+    Rollback --> Deploy
+    Health -->|Yes| Scale["Autoscale pods + nodes"]
+    Scale --> Upgrade{"Upgrade due?"}
+    Upgrade -->|Yes| Release["Upgrade control plane / node pools"]
+    Release --> Validate["Run post-upgrade checks"]
+    Upgrade -->|No| Observe["Observe cost + SLOs"]
+    Validate --> Observe
+    Observe --> Ready["Operate production cluster"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef build fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef ops fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Plan,Mode start;
+    class Cluster,Pools,Network,Policy,Deploy build;
+    class Health,Rollback,Scale,Upgrade,Release,Validate,Observe ops;
+    class Ready finish;
+```
+<!-- workflow-diagram:end -->
+
 ## Architecture
 
 ```mermaid

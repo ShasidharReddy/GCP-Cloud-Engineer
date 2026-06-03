@@ -6,6 +6,44 @@ Google Cloud Monitoring & Observability helps teams observe infrastructure, serv
 
 This guide consolidates key concepts and practical commands for operating Google Cloud workloads with Cloud Monitoring, Cloud Logging, Cloud Trace, Error Reporting, alerting, SLO management, dashboards, the Ops Agent, and Cloud Profiler.
 
+<!-- workflow-diagram:start -->
+## Cloud Operations Workflow
+```mermaid
+flowchart LR
+    Sources["Apps + infra + services"] --> Collect["Ops Agent / native telemetry"]
+    subgraph Signals["Signals pipeline"]
+        Metrics["Metrics"]
+        Logs["Logs"]
+        Traces["Traces"]
+        Errors["Errors"]
+    end
+    Collect --> Metrics
+    Collect --> Logs
+    Collect --> Traces
+    Collect --> Errors
+    Metrics --> Dash["Dashboards + SLOs"]
+    Logs --> Dash
+    Traces --> Dash
+    Errors --> Dash
+    Dash --> Alert{"Threshold or burn-rate breach?"}
+    Alert -->|No| Observe["Continue baseline monitoring"]
+    Alert -->|Yes| Notify["Alerting policy + incident"]
+    Notify --> Triage["Logs, traces, profiler, runbook"]
+    Triage --> Fix{"Issue mitigated?"}
+    Fix -->|No| Escalate["Scale team response"]
+    Escalate --> Triage
+    Fix -->|Yes| Review["Postmortem + tuning"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef signal fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef ops fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Sources,Collect start;
+    class Metrics,Logs,Traces,Errors,Dash signal;
+    class Alert,Notify,Triage,Fix,Escalate,Observe ops;
+    class Review finish;
+```
+<!-- workflow-diagram:end -->
+
 ## Core Capabilities Map
 
 ```mermaid
