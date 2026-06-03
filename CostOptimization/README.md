@@ -9,6 +9,41 @@ This document consolidates practical Google Cloud Platform (GCP) cost optimizati
 - Use the comparison tables to estimate tradeoffs.
 - Use the best practices to standardize cost governance.
 
+<!-- workflow-diagram:start -->
+## Cost Optimization Workflow
+```mermaid
+flowchart LR
+    Spend["Billing export + inventory"] --> Analyze["Analyze cost drivers"]
+    Analyze --> Commit{"Steady-state usage?"}
+    Commit -->|Yes| CUD["Apply CUDs / reservations"]
+    Commit -->|No| Elastic["Prefer autoscaling / spot"]
+    subgraph Efficiency["Optimization levers"]
+        Rightsize["Rightsize compute"]
+        Storage["Optimize storage tiers"]
+        Network["Reduce egress + idle LBs"]
+        Data["Tune BigQuery / Dataflow"]
+    end
+    CUD --> Rightsize
+    Elastic --> Rightsize
+    Rightsize --> Storage
+    Storage --> Network
+    Network --> Data
+    Data --> Budget["Budgets + alerts"]
+    Budget --> Review{"Savings validated?"}
+    Review -->|No| Iterate["Refine labels, reports, and actions"]
+    Iterate --> Analyze
+    Review -->|Yes| Govern["FinOps review cadence"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef savings fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef controls fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Spend,Analyze,Commit start;
+    class CUD,Elastic,Rightsize,Storage,Network,Data savings;
+    class Budget,Review,Iterate controls;
+    class Govern finish;
+```
+<!-- workflow-diagram:end -->
+
 ## Cost Optimization Framework
 
 ```mermaid

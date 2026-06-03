@@ -2,6 +2,43 @@
 
 Cloud SQL is a fully managed service for MySQL, PostgreSQL, and SQL Server on Google Cloud.
 
+<!-- workflow-diagram:start -->
+## Cloud SQL Setup Workflow
+```mermaid
+flowchart LR
+    Start["Select relational workload"] --> Engine{"Choose engine"}
+    Engine -->|MySQL| Sizing["Size CPU / memory / storage"]
+    Engine -->|PostgreSQL| Sizing
+    Engine -->|SQL Server| Sizing
+    subgraph Config["Instance configuration"]
+        HA["HA / regional placement"]
+        Backup["Backups + PITR"]
+        Network["Private IP / authorized access"]
+        Flags["DB flags + maintenance"]
+    end
+    Sizing --> HA
+    HA --> Backup
+    Backup --> Network
+    Network --> Flags
+    Flags --> Connect{"Connection method?"}
+    Connect -->|Proxy / Connector| App["Apps connect securely"]
+    Connect -->|Authorized network| App
+    App --> Migrate["Import schema / migrate data"]
+    Migrate --> Health{"Replication & health OK?"}
+    Health -->|No| Tune["Adjust flags, replicas, or connectivity"]
+    Tune --> Connect
+    Health -->|Yes| Operate["Monitor, patch, and scale"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef config fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef ops fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Start,Engine,Sizing start;
+    class HA,Backup,Network,Flags,App config;
+    class Connect,Migrate,Health,Tune ops;
+    class Operate finish;
+```
+<!-- workflow-diagram:end -->
+
 ## Architecture
 
 ```mermaid

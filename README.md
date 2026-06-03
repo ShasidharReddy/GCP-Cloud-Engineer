@@ -1,39 +1,164 @@
-# Google Cloud Platform — Reference & Lab Notes
+<div align="center">
+<pre>
+┌──────────────────────────────────────────────────────────────────────┐
+│                                                                      │
+│   ____  _               _        ____  ____ ____                     │
+│  / ___|| |__   __ _ ___(_)      / ___|/ ___|  _ \                   │
+│  \___ \| '_ \ / _` / __| |____ | |  _| |   | |_) |                 │
+│   ___) | | | | (_| \__ \ |____ | |_| | |___|  __/                   │
+│  |____/|_| |_|\__,_|___/_|      \____|\____|_|                      │
+│                                                                      │
+│         Comprehensive GCP Guide  —  Basic to Advanced                │
+│                                                                      │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│   Provider : Google Cloud Platform   Region  : Global                │
+│   Services : Compute, VPC, SQL...    Modules : 20+                   │
+│                                                                      │
+│   Last login: Tue Jun 3 11:19:46 2025 from github.com/ShasidharReddy │
+│                                                                      │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│   admin@shasi-gcp:~$ gcloud config list                              │
+│                                                                      │
+│   Welcome to Shasi-GCP!                                              │
+│   Your complete GCP learning environment.                            │
+│                                                                      │
+│   Type 'ls' to explore modules. Happy learning!                      │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+</pre>
+</div>
 
-A curated collection of GCP command references, scripts, and step-by-step lab guides covering core GCP services. Organized by topic — use this as a quick reference while working on GCP projects.
+# ☁️ Shasi-GCP — Comprehensive Guide (Basic → Advanced)
+
+A curated collection of GCP command references, scripts, and step-by-step lab guides for Shasi-GCP. Organized by topic — use this as a quick reference while learning, building, and operating on Google Cloud.
 
 ---
 
-## 📁 Directory Structure
+## 📊 Content Stats
 
-| Directory | Description |
-|-----------|-------------|
-| [`V2/`](./V2/) | **Latest & recommended** — structured guides for GCE, VPC, IAM, GCS, Cloud SQL, and more |
-| [`Architecture/`](./Architecture/) | 🔷 **Visual diagrams** — Mermaid flow diagrams for all major GCP services |
-| [`CDN/`](./CDN/) | Cloud CDN setup scripts and performance testing steps |
-| [`CloudFunctions/`](./CloudFunctions/) | Cloud Functions (Gen2) — HTTP, Pub/Sub, GCS triggers with Python, Node.js, Go |
-| [`CloudSQL/`](./CloudSQL/) | Cloud SQL — MySQL/PostgreSQL with HA, replicas, backups, and connection methods |
-| [`Compute/`](./Compute/) | Persistent disk operations (create, attach, resize, format) |
-| [`EncryptionKeys/`](./EncryptionKeys/) | CSEK (Customer-Supplied Encryption Key) for GCS buckets |
-| [`Examples/`](./Examples/) | Sample applications (Node.js) |
-| [`GKE/`](./GKE/) | Google Kubernetes Engine — clusters, node pools, deployments, autoscaling |
-| [`LoadBalancer/`](./LoadBalancer/) | Network LB and HTTP(S) LB setup scripts |
-| [`MemoryStore/`](./MemoryStore/) | Redis on GCP (Memorystore) setup guide |
-| [`Migration/`](./Migration/) | 🔷 **Cloud Migration** — On-Prem, AWS, Azure to GCP migration guides with step-by-step commands |
-| [`Packer/`](./Packer/) | Packer templates for building custom GCP machine images |
-| [`Terraform/`](./Terraform/) | Terraform example for VPC, subnets, and firewall on GCP |
-| [`VPC/`](./VPC/) | VPC, subnets, firewall rules, NAT, VPC peering, Shared VPC scripts |
-| [`Networking/`](./Networking/) | 🔷 **GCP Networking** — VPC, Firewall, Cloud NAT, Router, Interconnect, VPN, Shared VPC, DNS |
-| [`IAM-Security/`](./IAM-Security/) | 🔷 **IAM & Security** — Resource hierarchy, roles, service accounts, KMS, Secret Manager, VPC Service Controls |
-| [`Monitoring/`](./Monitoring/) | 🔷 **Monitoring & Observability** — Cloud Monitoring, Logging, Trace, Error Reporting, Alerting, SLOs |
-| [`DataPipeline/`](./DataPipeline/) | 🔷 **Data Pipelines** — Dataflow, Pub/Sub, BigQuery, Cloud Composer, Dataproc, batch vs streaming |
-| [`CostOptimization/`](./CostOptimization/) | 🔷 **Cost Optimization** — CUDs, SUDs, Spot VMs, right-sizing, billing, FinOps best practices |
-| [`HybridMultiCloud/`](./HybridMultiCloud/) | 🔷 **Hybrid & Multi-Cloud** — Anthos, GKE on-prem, Service Mesh, Config Management, fleet management |
-| [`Serverless/`](./Serverless/) | 🔷 **Serverless Patterns** — Cloud Run vs Functions vs App Engine, Eventarc, Workflows, API Gateway |
-| [`Database/`](./Database/) | 🔷 **Database Services** — Cloud SQL, AlloyDB, Spanner, Firestore, Bigtable, Memorystore, DMS, decision guide |
-| [`artifactory/`](./artifactory/) | Java Hello World app with Docker + Kubernetes deployment guide |
-| [`http-lb-backend-buckets-terraform/`](./http-lb-backend-buckets-terraform/) | HTTP LB with backend buckets — Terraform examples (MIG + NAT, multi-MIG) |
-| [`javamavenapp/`](./javamavenapp/) | Java Maven app with Cloud Build CI/CD pipeline |
+| Metric | Value |
+|--------|------:|
+| Top-level modules | 27 |
+| Topic directories with README guides | 24 |
+| Workflow diagrams added in this refresh | 19 |
+| Top-level reference files | 8 |
+| Structured `V2/` learning tracks | 12+ |
+| Coverage level | Basic to Advanced |
+
+---
+
+## 🗺️ Animated Module Map
+
+```mermaid
+flowchart LR
+    Repo["Shasi-GCP"] --> Foundations
+    Repo --> Platform
+    Repo --> Operations
+    Repo --> Automation
+    Repo --> Examples
+
+    subgraph Foundations["Foundations & Core Services"]
+        V2["V2"]
+        Architecture["Architecture"]
+        Compute["Compute"]
+        VPC["VPC"]
+        Networking["Networking"]
+        IAM["IAM-Security"]
+        Database["Database"]
+        Monitoring["Monitoring"]
+    end
+
+    subgraph Platform["Platform & Runtime Services"]
+        GKE["GKE"]
+        CloudRun["CloudRun"]
+        CloudFunctions["CloudFunctions"]
+        CloudSQL["CloudSQL"]
+        Serverless["Serverless"]
+        DataPipeline["DataPipeline"]
+        MemoryStore["MemoryStore"]
+        CDN["CDN"]
+        LoadBalancer["LoadBalancer"]
+    end
+
+    subgraph Operations["Architecture, Migration & Optimization"]
+        Migration["Migration"]
+        Cost["CostOptimization"]
+        Hybrid["HybridMultiCloud"]
+        Encryption["EncryptionKeys"]
+    end
+
+    subgraph Automation["IaC & Image Automation"]
+        Terraform["Terraform"]
+        Packer["Packer"]
+        BackendLB["http-lb-backend-buckets-terraform"]
+    end
+
+    subgraph Examples["Samples & Delivery Examples"]
+        ExamplesDir["Examples"]
+        Artifactory["artifactory"]
+        JavaMaven["javamavenapp"]
+    end
+
+    V2 --> Compute
+    V2 --> Networking
+    V2 --> IAM
+    Networking --> LoadBalancer
+    Database --> CloudSQL
+    Serverless --> CloudFunctions
+    Serverless --> CloudRun
+    DataPipeline --> Monitoring
+    Hybrid --> GKE
+    Terraform --> BackendLB
+
+    classDef repo fill:#0B3D91,stroke:#062B66,color:#FFFFFF,stroke-width:2px;
+    classDef foundation fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef platform fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef operations fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef automation fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    classDef samples fill:#ECEFF1,stroke:#546E7A,color:#263238;
+    class Repo repo;
+    class V2,Architecture,Compute,VPC,Networking,IAM,Database,Monitoring foundation;
+    class GKE,CloudRun,CloudFunctions,CloudSQL,Serverless,DataPipeline,MemoryStore,CDN,LoadBalancer platform;
+    class Migration,Cost,Hybrid,Encryption operations;
+    class Terraform,Packer,BackendLB automation;
+    class ExamplesDir,Artifactory,JavaMaven samples;
+```
+
+---
+
+## 📁 Enhanced Directory Structure
+
+| Domain | Directory | Description |
+|--------|-----------|-------------|
+| Core learning track | [`V2/`](./V2/) | **Latest & recommended** — structured guides for GCE, VPC, IAM, GCS, Cloud SQL, firewalls, instance groups, instance templates, and infrastructure fundamentals |
+| Visual reference | [`Architecture/`](./Architecture/) | 🔷 **Visual diagrams** — Mermaid flow diagrams for major GCP services, migration paths, networking, storage, IAM, and architecture decisions |
+| Edge delivery | [`CDN/`](./CDN/) | Cloud CDN setup scripts, HTTP load balancer integration, cache testing, and performance validation steps |
+| Serverless compute | [`CloudFunctions/`](./CloudFunctions/) | Cloud Functions (Gen2) — HTTP, Pub/Sub, and GCS-triggered patterns with Python, Node.js, and Go |
+| Containers on serverless | [`CloudRun/`](./CloudRun/) | Cloud Run — services, jobs, revisions, networking, Cloud SQL, Eventarc, CI/CD, and secure production operations |
+| Relational databases | [`CloudSQL/`](./CloudSQL/) | Cloud SQL — MySQL/PostgreSQL/SQL Server with HA, replicas, backups, private connectivity, and connection methods |
+| Virtual machines | [`Compute/`](./Compute/) | Persistent disk operations for Compute Engine: create, attach, resize, format, mount, and lifecycle reference |
+| Security keys | [`EncryptionKeys/`](./EncryptionKeys/) | CSEK (Customer-Supplied Encryption Key) examples and Cloud Storage encryption references |
+| App samples | [`Examples/`](./Examples/) | Sample applications and runnable examples, including Node.js hello-world references |
+| Containers & Kubernetes | [`GKE/`](./GKE/) | Google Kubernetes Engine — cluster architecture, node pools, deployments, autoscaling, networking, and operations |
+| Traffic distribution | [`LoadBalancer/`](./LoadBalancer/) | Network LB and HTTP(S) LB setup scripts, startup assets, and multi-version load-balancing examples |
+| In-memory caching | [`MemoryStore/`](./MemoryStore/) | Redis on GCP (Memorystore) setup guide, CLI references, and quick-start cache workflows |
+| Migration | [`Migration/`](./Migration/) | 🔷 **Cloud Migration** — On-Prem, AWS, and Azure to GCP migration guides with phased commands and cutover workflows |
+| Image automation | [`Packer/`](./Packer/) | Packer templates and notes for building custom GCP machine images |
+| Infrastructure as Code | [`Terraform/`](./Terraform/) | Terraform examples for VPCs, subnets, firewall rules, and foundational GCP network provisioning |
+| Network foundations | [`VPC/`](./VPC/) | VPC, subnets, firewall rules, NAT, VPC peering, and Shared VPC scripts |
+| Network deep dive | [`Networking/`](./Networking/) | 🔷 **GCP Networking** — VPC, Firewall, Cloud NAT, Router, Interconnect, VPN, Shared VPC, and DNS design notes |
+| Identity & guardrails | [`IAM-Security/`](./IAM-Security/) | 🔷 **IAM & Security** — resource hierarchy, roles, service accounts, KMS, Secret Manager, SCC, and VPC Service Controls |
+| Observability | [`Monitoring/`](./Monitoring/) | 🔷 **Monitoring & Observability** — Cloud Monitoring, Logging, Trace, Error Reporting, Alerting, Dashboards, and SLOs |
+| Data engineering | [`DataPipeline/`](./DataPipeline/) | 🔷 **Data Pipelines** — Dataflow, Pub/Sub, BigQuery, Cloud Composer, Dataproc, and batch vs. streaming patterns |
+| Cost governance | [`CostOptimization/`](./CostOptimization/) | 🔷 **Cost Optimization** — CUDs, SUDs, Spot VMs, right-sizing, billing exports, FinOps controls, and spend governance |
+| Hybrid platform | [`HybridMultiCloud/`](./HybridMultiCloud/) | 🔷 **Hybrid & Multi-Cloud** — Anthos, GKE on-prem, Service Mesh, Config Management, distributed operations, and fleet management |
+| Serverless patterns | [`Serverless/`](./Serverless/) | 🔷 **Serverless Patterns** — Cloud Run vs Functions vs App Engine, Eventarc, Workflows, API Gateway, and integration patterns |
+| Database decisioning | [`Database/`](./Database/) | 🔷 **Database Services** — Cloud SQL, AlloyDB, Spanner, Firestore, Bigtable, Memorystore, DMS, and service selection guidance |
+| Deployment example | [`artifactory/`](./artifactory/) | Java Hello World application with Docker + Kubernetes deployment guide |
+| Terraform LB examples | [`http-lb-backend-buckets-terraform/`](./http-lb-backend-buckets-terraform/) | HTTP load balancer with backend buckets — Terraform examples for MIG + NAT and multi-MIG layouts |
+| CI/CD app example | [`javamavenapp/`](./javamavenapp/) | Java Maven application with Cloud Build CI/CD pipeline examples |
 
 ---
 
@@ -42,13 +167,62 @@ A curated collection of GCP command references, scripts, and step-by-step lab gu
 | File | Description |
 |------|-------------|
 | [`GCS.md`](./GCS.md) | `gsutil` command reference for Cloud Storage buckets |
-| [`allCommands.md`](./allCommands.md) | Quick-reference `gcloud` commands across IAM, VPC, GCE, GCS, Cloud SQL, App Engine, Cloud Run |
+| [`allCommands.md`](./allCommands.md) | Quick-reference `gcloud` commands across IAM, VPC, GCE, GCS, Cloud SQL, App Engine, and Cloud Run |
 | [`cloudrun.md`](./cloudrun.md) | Cloud Run deployment and traffic management |
 | [`cloud_spanner.md`](./cloud_spanner.md) | Cloud Spanner instance, database, and table operations |
 | [`database_migration.md`](./database_migration.md) | Step-by-step GCP Database Migration Service (DMS) lab guide |
 | [`gcloud_commands.sh`](./gcloud_commands.sh) | General `gcloud` configuration and common commands |
 | [`vpn_2_accounts_infra.md`](./vpn_2_accounts_infra.md) | Cloud VPN between two GCP accounts |
 | [`vpn_dynamic_ha.md`](./vpn_dynamic_ha.md) | HA VPN (dynamic routing with BGP) setup |
+
+---
+
+## 🧭 Learning Path Diagram
+
+```mermaid
+flowchart TD
+    Start["Start Here"] --> Fundamentals["V2 Foundations<br/>Cloud Computing + Infrastructure"]
+    Fundamentals --> CoreNet["Core Networking<br/>VPC + Networking"]
+    Fundamentals --> CoreCompute["Core Compute<br/>Compute + Load Balancer"]
+    Fundamentals --> CoreIdentity["Core Security<br/>IAM-Security + EncryptionKeys"]
+    CoreNet --> PlatformData["Data & Persistence<br/>Database + CloudSQL + MemoryStore"]
+    CoreCompute --> PlatformRuntime["Runtime Platforms<br/>GKE + Serverless + CloudFunctions"]
+    CoreIdentity --> Observability["Operate Securely<br/>Monitoring + Architecture"]
+    PlatformData --> Delivery["Delivery & Edge<br/>CDN + DataPipeline"]
+    PlatformRuntime --> Delivery
+    Observability --> Automation["Automate Everything<br/>Terraform + Packer"]
+    Delivery --> Advanced["Advanced Journeys<br/>Migration + HybridMultiCloud + CostOptimization"]
+    Automation --> Advanced
+    Advanced --> Projects["Hands-on Projects<br/>Examples + javamavenapp + artifactory"]
+
+    classDef beginner fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef intermediate fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef advanced fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef expert fill:#FCE4EC,stroke:#D81B60,color:#880E4F;
+    classDef finish fill:#ECEFF1,stroke:#546E7A,color:#263238;
+    class Start,Fundamentals beginner;
+    class CoreNet,CoreCompute,CoreIdentity,PlatformData,PlatformRuntime,Observability intermediate;
+    class Delivery,Automation advanced;
+    class Advanced expert;
+    class Projects finish;
+```
+
+---
+
+## 🔗 Quick Links
+
+| Resource | Link |
+|----------|------|
+| GCP Console | [console.cloud.google.com](https://console.cloud.google.com/) |
+| Google Cloud SDK install | [cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install) |
+| `gcloud` CLI reference | [cloud.google.com/sdk/gcloud/reference](https://cloud.google.com/sdk/gcloud/reference) |
+| Pricing Calculator | [cloud.google.com/products/calculator](https://cloud.google.com/products/calculator) |
+| Google Cloud Status | [status.cloud.google.com](https://status.cloud.google.com/) |
+| Architecture Center | [cloud.google.com/architecture](https://cloud.google.com/architecture) |
+| Well-Architected Framework | [cloud.google.com/architecture/framework](https://cloud.google.com/architecture/framework) |
+| Cloud Skills Boost | [cloudskillsboost.google](https://www.cloudskillsboost.google/) |
+| IAM overview | [cloud.google.com/iam/docs/overview](https://cloud.google.com/iam/docs/overview) |
+| Cloud Monitoring docs | [cloud.google.com/monitoring/docs](https://cloud.google.com/monitoring/docs) |
 
 ---
 

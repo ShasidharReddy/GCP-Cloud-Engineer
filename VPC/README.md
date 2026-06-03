@@ -1,6 +1,40 @@
 # VPC — Virtual Private Cloud Scripts
 
 This directory contains `gcloud` scripts for setting up VPC networks, subnets, firewall rules, NAT, VPC peering, and Shared VPC on Google Cloud.
+<!-- workflow-diagram:start -->
+## VPC / Subnet / Firewall Flow
+```mermaid
+flowchart LR
+    Start["Create network"] --> Mode{"Auto or custom mode?"}
+    Mode -->|Auto| Auto["Auto subnets"]
+    Mode -->|Custom| Custom["Custom CIDR plan"]
+    Auto --> Subnet
+    Custom --> Subnet
+    subgraph NetworkPlane["Network plane"]
+        Subnet["Regional subnets"] --> Route["Routes"]
+        Route --> Peering["Peering / Shared VPC"]
+    end
+    Peering --> Firewall["Firewall policy"]
+    Firewall --> Internet{"Need egress?"}
+    Internet -->|Yes| NAT["Cloud NAT / gateway"]
+    Internet -->|No| Private["Private-only access"]
+    NAT --> Workload["Attach VM / GKE / service"]
+    Private --> Workload
+    Workload --> Validate{"Connectivity allowed?"}
+    Validate -->|No| Fix["Update tags, service accounts, or rules"]
+    Fix --> Firewall
+    Validate -->|Yes| Ready["Operational VPC"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef network fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef security fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#FCE4EC,stroke:#D81B60,color:#880E4F;
+    class Start,Mode,Auto,Custom start;
+    class Subnet,Route,Peering,Workload network;
+    class Firewall,Internet,Validate,Fix,NAT,Private security;
+    class Ready finish;
+```
+<!-- workflow-diagram:end -->
+
 
 ---
 

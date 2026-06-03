@@ -2,7 +2,44 @@
 
 Comprehensive guide for migrating workloads from **On-Premises**, **AWS**, and **Azure** to Google Cloud Platform.
 
+## 📘 Migration deep-dive playbooks
+
+- [Production Disaster Recovery and Operational Scenarios](./disaster-recovery-prod-scenarios.md)
+
 > 📌 **Visual Diagrams**: See [Architecture/README.md](../Architecture/README.md) for Mermaid flow diagrams of all migration paths.
+<!-- workflow-diagram:start -->
+## Migration Phases Workflow
+```mermaid
+flowchart LR
+    Discover["Inventory source estate"] --> Assess["Assess apps, data, dependencies"]
+    Assess --> Strategy{"Rehost, replatform, or refactor?"}
+    subgraph Source["Migration sources"]
+        OnPrem["On-Prem"]
+        AWS["AWS"]
+        Azure["Azure"]
+    end
+    Source --> Assess
+    Strategy --> Landing["Build GCP landing zone"]
+    Landing --> Pilot["Pilot migration wave"]
+    Pilot --> Replicate["Replicate data / images / configs"]
+    Replicate --> Cutover{"Cutover criteria met?"}
+    Cutover -->|No| Remediate["Fix blockers + rerun pilot"]
+    Remediate --> Pilot
+    Cutover -->|Yes| Migrate["Execute migration wave"]
+    Migrate --> Validate["Functional + performance validation"]
+    Validate --> Optimize["Rightsize, secure, observe"]
+    Optimize --> Operate["Operate on GCP"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef source fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef wave fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Discover,Assess,Strategy start;
+    class OnPrem,AWS,Azure,Landing source;
+    class Pilot,Replicate,Cutover,Remediate,Migrate,Validate,Optimize wave;
+    class Operate finish;
+```
+<!-- workflow-diagram:end -->
+
 
 ---
 

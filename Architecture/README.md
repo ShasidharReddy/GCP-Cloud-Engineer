@@ -6,6 +6,46 @@ Visual reference diagrams for Google Cloud Platform services. All diagrams use [
 >
 > ![GCP Compute Decision Flowchart](https://storage.googleapis.com/gweb-cloudblog-publish/images/CvKvRvF_v10-07-21.max-2000x2000.jpg)
 
+<!-- workflow-diagram:start -->
+## Workflow Overview
+```mermaid
+flowchart LR
+    U["Engineer / Architect"] --> R["Review requirements"]
+    R --> D{"Primary driver?"}
+    subgraph Core["Core platform pillars"]
+        C["Compute"]
+        N["Networking"]
+        DS["Data Services"]
+        SEC["IAM & Security"]
+    end
+    subgraph Delivery["Delivery path"]
+        OBS["Observability"]
+        IAC["Automation"]
+        PROD["Production blueprint"]
+    end
+    D -->|Application| C
+    D -->|Connectivity| N
+    D -->|Persistence| DS
+    C --> N
+    DS --> N
+    N --> SEC
+    C --> OBS
+    DS --> OBS
+    SEC --> IAC
+    OBS --> IAC
+    IAC --> PROD
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef platform fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef ops fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class U,R,D start;
+    class C,N,DS,SEC platform;
+    class OBS,IAC ops;
+    class PROD finish;
+```
+<!-- workflow-diagram:end -->
+
+
 ---
 
 ## 📋 Table of Contents

@@ -3,6 +3,41 @@
 ## Overview
 
 This document summarizes key Google Cloud Platform (GCP) Identity and Security concepts from foundational architecture and day-to-day operational security perspectives. It focuses on how access is structured, how identities are managed, how guardrails are enforced, and how platform-native security services reduce risk.
+<!-- workflow-diagram:start -->
+## IAM Policy Binding Workflow
+```mermaid
+flowchart LR
+    Request["Access request"] --> Scope["Choose org / folder / project"]
+    Scope --> Identity{"Human or workload identity?"}
+    subgraph IdentityPlane["Identity plane"]
+        User["User / Group"]
+        SA["Service Account"]
+        Federation["Federated identity"]
+    end
+    Identity -->|Human| User
+    Identity -->|Workload| SA
+    Identity -->|External| Federation
+    User --> Role["Select least-privilege role"]
+    SA --> Role
+    Federation --> Role
+    Role --> Bind["Create IAM binding"]
+    Bind --> Guardrails["Apply org policy / VPC-SC / conditions"]
+    Guardrails --> Test{"Access works as intended?"}
+    Test -->|No| Review["Audit policy, deny, or inheritance"]
+    Review --> Role
+    Test -->|Yes| Log["Audit logs + monitoring"]
+    Log --> Secure["Sustain secure access"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef idp fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef control fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Request,Scope,Identity start;
+    class User,SA,Federation,Role,Bind idp;
+    class Guardrails,Test,Review,Log control;
+    class Secure finish;
+```
+<!-- workflow-diagram:end -->
+
 
 ---
 
@@ -21,6 +56,12 @@ This document summarizes key Google Cloud Platform (GCP) Identity and Security c
 11. [Cloud KMS](#cloud-kms)
 12. [Operational Security Checklist](#operational-security-checklist)
 13. [Reference Commands](#reference-commands)
+
+---
+
+## Identity Deep Dive
+
+- [IAP and identity guide](./iap-and-identity.md)
 
 ---
 

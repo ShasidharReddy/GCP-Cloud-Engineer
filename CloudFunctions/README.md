@@ -2,6 +2,41 @@
 
 Cloud Functions is Google Cloud's serverless Functions-as-a-Service (FaaS) platform. Write single-purpose functions that respond to events — no servers to manage.
 
+<!-- workflow-diagram:start -->
+## Event-Driven Function Workflow
+```mermaid
+flowchart LR
+    Trigger["HTTP / PubSub / GCS / Eventarc"] --> Source["Write function code"]
+    Source --> Build["Buildpack or container build"]
+    Build --> Deploy["Deploy Gen2 function"]
+    Deploy --> Runtime{"Needs VPC or secrets?"}
+    subgraph RuntimePlane["Runtime integrations"]
+        Secrets["Secret Manager"]
+        VPCConn["Serverless VPC Access"]
+        SA["Service account"]
+    end
+    Runtime -->|Yes| Secrets
+    Runtime -->|Yes| VPCConn
+    Runtime -->|Always| SA
+    Secrets --> Execute["Invoke function"]
+    VPCConn --> Execute
+    SA --> Execute
+    Execute --> Result{"Succeeded?"}
+    Result -->|No| Retry["Retry / dead-letter / logs"]
+    Retry --> Execute
+    Result -->|Yes| Emit["Return response / publish event"]
+    Emit --> Observe["Metrics, logs, alerting"]
+    classDef start fill:#E3F2FD,stroke:#1E88E5,color:#0D47A1;
+    classDef runtime fill:#E8F5E9,stroke:#43A047,color:#1B5E20;
+    classDef ops fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    classDef finish fill:#F3E5F5,stroke:#8E24AA,color:#4A148C;
+    class Trigger,Source,Build,Deploy,Runtime start;
+    class Secrets,VPCConn,SA,Execute runtime;
+    class Result,Retry,Observe ops;
+    class Emit finish;
+```
+<!-- workflow-diagram:end -->
+
 ## Architecture
 
 ```mermaid
