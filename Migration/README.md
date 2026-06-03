@@ -2,6 +2,10 @@
 
 Comprehensive guide for migrating workloads from **On-Premises**, **AWS**, and **Azure** to Google Cloud Platform.
 
+## 📘 Migration deep-dive playbooks
+
+- [Production Disaster Recovery and Operational Scenarios](./disaster-recovery-prod-scenarios.md)
+
 > 📌 **Visual Diagrams**: See [Architecture/README.md](../Architecture/README.md) for Mermaid flow diagrams of all migration paths.
 <!-- workflow-diagram:start -->
 ## Migration Phases Workflow

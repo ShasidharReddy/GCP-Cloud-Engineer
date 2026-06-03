@@ -4,6 +4,11 @@
 
 This document is the **central database guide** for the repository. It complements deeper service-specific notes such as [Cloud SQL](../CloudSQL/), [Cloud Spanner](../cloud_spanner.md), [Memorystore](../MemoryStore/), [Database Migration Service](../database_migration.md), and [Data Pipeline / BigQuery](../DataPipeline/).
 
+## 📘 Database deep-dive playbooks
+
+- [Real-World Database Migration Scenarios](./database-migration-scenarios.md)
+- [Private Database Access Patterns](./private-database-access.md)
+
 <!-- workflow-diagram:start -->
 ## Database Selection & Connection Workflow
 ```mermaid
