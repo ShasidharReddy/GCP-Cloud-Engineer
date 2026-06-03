@@ -51,7 +51,6 @@ gcloud compute firewall-rules create allow-app-to-db --project=HOST_PROJECT --ne
 ```bash
 gcloud compute firewall-rules create allow-batch-to-api --project=HOST_PROJECT --network=VPC_NAME --direction=INGRESS --priority=1300 --action=ALLOW --rules=tcp:8443 --source-service-accounts=batch-sa@PROJECT_ID.iam.gserviceaccount.com --target-service-accounts=api-sa@PROJECT_ID.iam.gserviceaccount.com
 ```
-- Operational note: Keep rule descriptions, ticket IDs, and owner metadata in the change record even if the command syntax does not store them directly.
 
 ## Step 4: Log high-value firewall decisions
 - Why this step matters: Firewall logs help incident responders verify which policy layer accepted or denied traffic.
@@ -59,7 +58,6 @@ gcloud compute firewall-rules create allow-batch-to-api --project=HOST_PROJECT -
 gcloud compute firewall-rules update allow-app-to-db --project=HOST_PROJECT --enable-logging
 gcloud compute firewall-policies rules update 1000 --firewall-policy=POLICY_ID --enable-logging
 ```
-- Operational note: Keep rule descriptions, ticket IDs, and owner metadata in the change record even if the command syntax does not store them directly.
 
 ## Step 5: Review effective posture before rollout
 - Why this step matters: Reviewing both layers together reduces the chance of conflicting assumptions between platform and workload owners.
@@ -67,7 +65,6 @@ gcloud compute firewall-policies rules update 1000 --firewall-policy=POLICY_ID -
 gcloud compute firewall-rules list --project=HOST_PROJECT --format="table(name,direction,priority,allowed,sourceRanges,targetTags)"
 gcloud compute firewall-policies rules list --firewall-policy=POLICY_ID
 ```
-- Operational note: Keep rule descriptions, ticket IDs, and owner metadata in the change record even if the command syntax does not store them directly.
 
 ## Cloud Armor vs Firewall vs IAP
 | Control | Best fit | Primary decision point | Typical example |
