@@ -294,21 +294,14 @@ sequenceDiagram
     participant C as Consumer
     participant D as Dead Letter Topic
 
+    Note over P,T: Ingestion
     P->>T: Publish message
+    Note over T,S: Buffering and routing
     T->>S: Fan-out delivery
+    Note over S,C: Processing
     S->>C: Push or pull delivery
     C-->>S: Ack message
     S-->>D: Route after max delivery attempts
-
-    rect rgb(66,133,244)
-    note over P,T: Ingestion
-    end
-    rect rgb(251,188,5)
-    note over T,S: Buffering and routing
-    end
-    rect rgb(52,168,83)
-    note over S,C: Processing
-    end
 ```
 
 ### Explanation
@@ -1103,25 +1096,16 @@ sequenceDiagram
     participant B as BigQuery
     participant L as Looker
 
+    Note over S,P: Event production
     S->>P: Publish event
+    Note over P,D: Real-time processing
     P->>D: Stream message
     D->>D: Parse, validate, enrich, window
+    Note over D,B: Analytics storage
     D->>B: Write streaming rows
+    Note over B,L: Consumption
     L->>B: Query analytics tables
     B-->>L: Low-latency results
-
-    rect rgb(66,133,244)
-    note over S,P: Event production
-    end
-    rect rgb(251,188,5)
-    note over P,D: Real-time processing
-    end
-    rect rgb(52,168,83)
-    note over D,B: Analytics storage
-    end
-    rect rgb(234,67,53)
-    note over B,L: Consumption
-    end
 ```
 
 ### Explanation
@@ -1324,3 +1308,13 @@ A simple rule of thumb:
 - **Looker** for real-time and governed analytics
 
 Use the simplest architecture that satisfies latency, scale, governance, and maintainability requirements.
+
+---
+
+## 📚 Official Documentation
+
+- [Dataflow](https://cloud.google.com/dataflow/docs)
+- [Pub/Sub](https://cloud.google.com/pubsub/docs)
+- [BigQuery](https://cloud.google.com/bigquery/docs)
+- [Cloud Composer](https://cloud.google.com/composer/docs)
+- [Dataproc](https://cloud.google.com/dataproc/docs)

@@ -289,3 +289,23 @@ This repo includes **Mermaid flow diagrams** that render directly on GitHub — 
 - Scripts in this repo use placeholder values like `YOUR_PROJECT_ID` and `<SVC_ACCOUNT_MAIL_ID>` — replace them with your actual values before running.
 - The `V2/` directory contains the most up-to-date and well-documented guides.
 - Scripts are for **learning and reference** purposes — review before running in production.
+
+---
+
+## 📚 Official Documentation
+
+- [Compute Engine](https://cloud.google.com/compute/docs)
+- [VPC / Networking](https://cloud.google.com/vpc/docs)
+- [Cloud Storage](https://cloud.google.com/storage/docs)
+- [Cloud Run](https://cloud.google.com/run/docs)
+- [Cloud Functions](https://cloud.google.com/functions/docs)
+- [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/docs)
+- [Cloud Load Balancing](https://cloud.google.com/load-balancing/docs)
+- [Dataflow](https://cloud.google.com/dataflow/docs)
+- [Cloud Monitoring](https://cloud.google.com/monitoring/docs)
+- [Cloud SQL](https://cloud.google.com/sql/docs)
+- [IAM](https://cloud.google.com/iam/docs)
+- [Identity-Aware Proxy](https://cloud.google.com/iap/docs)
+- [Database Migration Service](https://cloud.google.com/database-migration/docs)
+- [Disaster Recovery Planning Guide](https://cloud.google.com/architecture/dr-scenarios-planning-guide)
+- [Terraform Google Provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs)
