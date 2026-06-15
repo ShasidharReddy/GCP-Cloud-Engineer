@@ -1,0 +1,7 @@
+project_id   = "my-production-project"
+region       = "us-central1"
+zone         = "us-central1-a"
+machine_type = "e2-medium"
+disk_size_gb = 100
+network_cidr = "10.10.0.0/24"
+tags         = ["single-vm", "http-server", "ssh-access"]

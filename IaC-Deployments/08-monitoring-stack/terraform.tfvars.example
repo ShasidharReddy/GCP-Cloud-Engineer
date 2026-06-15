@@ -1,0 +1,11 @@
+project_id               = "my-production-project"
+notification_email       = "ops@example.com"
+pagerduty_service_name   = "platform-oncall"
+pagerduty_service_key    = "replace-me"
+slack_channel_name       = "#incidents"
+slack_auth_token         = "replace-me"
+uptime_host              = "app.example.com"
+billing_account_id       = "billingAccounts/000000-000000-000000"
+monthly_budget_usd       = 1000
+bigquery_location        = "US"
+bucket_location          = "US"

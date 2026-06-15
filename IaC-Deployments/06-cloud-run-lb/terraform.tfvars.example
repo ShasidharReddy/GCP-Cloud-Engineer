@@ -1,0 +1,9 @@
+project_id              = "my-production-project"
+regions                 = ["us-central1", "us-east1"]
+domains                 = ["app.example.com"]
+container_image         = "us-docker.pkg.dev/cloudrun/container/hello"
+allow_unauthenticated   = true
+min_instances           = 1
+max_instances           = 10
+base_cidr               = "10.60.0.0/20"
+connector_cidr          = "10.61.0.0/20"

@@ -1,0 +1,7 @@
+project_id            = "my-production-project"
+regions               = ["us-central1", "europe-west1"]
+network_cidr          = "10.20.0.0/20"
+instance_count        = 2
+machine_type          = "e2-medium"
+domains               = ["ha.example.com"]
+service_account_email = "terraform-runtime@my-production-project.iam.gserviceaccount.com"

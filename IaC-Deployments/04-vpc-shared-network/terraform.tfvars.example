@@ -1,0 +1,5 @@
+host_project_id      = "network-host-prod"
+service_project_ids  = ["app-prod-01", "app-prod-02"]
+region               = "us-central1"
+base_cidr            = "10.40.0.0/20"
+ingress_source_ranges = ["10.0.0.0/8", "35.235.240.0/20"]
