@@ -1,0 +1,10 @@
+project_id                    = "my-production-project"
+primary_region                = "us-central1"
+secondary_region              = "us-east1"
+machine_type                  = "e2-medium"
+primary_instance_count        = 2
+secondary_instance_count      = 1
+base_cidr                     = "10.70.0.0/20"
+dns_zone_name                 = "example-dr.com"
+backup_endpoint_ip            = "198.51.100.20"
+runtime_service_account_email = "terraform-runtime@my-production-project.iam.gserviceaccount.com"

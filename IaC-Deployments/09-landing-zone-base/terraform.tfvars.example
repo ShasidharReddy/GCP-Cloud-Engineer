@@ -1,0 +1,13 @@
+organization_id          = "123456789012"
+customer_id              = "C0123abc"
+billing_account_id       = "billingAccounts/000000-000000-000000"
+bootstrap_project_id     = "bootstrap-admin-prod"
+shared_vpc_project_id    = "common-network-prod"
+logging_project_id       = "central-logging-prod"
+production_project_id    = "prod-app-001"
+nonproduction_project_id = "nonprod-app-001"
+sandbox_project_id       = "sandbox-app-001"
+default_region           = "us-central1"
+platform_admin_member    = "group:platform-admins@example.com"
+essential_contact_email  = "security@example.com"
+monthly_budget_usd       = 5000

@@ -1,0 +1,17 @@
+project_id                  = "my-production-project"
+region                      = "us-central1"
+enable_autopilot            = false
+deletion_protection        = true
+subnet_cidr                 = "10.30.0.0/20"
+pods_cidr                   = "10.31.0.0/16"
+services_cidr               = "10.32.0.0/20"
+master_ipv4_cidr_block      = "172.16.0.0/28"
+default_node_machine_type   = "e2-standard-4"
+highmem_node_machine_type   = "e2-highmem-4"
+spot_node_machine_type      = "e2-standard-4"
+master_authorized_networks = [
+  {
+    cidr_block   = "203.0.113.0/24"
+    display_name = "corp-egress"
+  }
+]

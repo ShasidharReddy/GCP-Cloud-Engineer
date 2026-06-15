@@ -1,0 +1,9 @@
+project_id                    = "my-production-project"
+region                        = "us-central1"
+data_engineer_members         = ["group:data-engineers@example.com"]
+run_dataflow_job              = false
+dataflow_template_gcs_path    = "gs://dataflow-templates-us-central1/latest/GCS_Text_to_BigQuery"
+dataflow_zone                 = "us-central1-a"
+dataflow_service_account_email = "dataflow-runner@my-production-project.iam.gserviceaccount.com"
+access_policy_id              = ""
+perimeter_name                = "datalake-perimeter"

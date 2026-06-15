@@ -1,0 +1,9 @@
+project_id           = "my-production-project"
+region               = "us-central1"
+dr_region            = "us-east1"
+database_version     = "POSTGRES_16"
+tier                 = "db-custom-2-7680"
+replica_tier         = "db-custom-2-7680"
+disk_size_gb         = 200
+network_cidr         = "10.50.0.0/24"
+deletion_protection  = true
