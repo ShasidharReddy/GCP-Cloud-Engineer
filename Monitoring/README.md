@@ -132,13 +132,22 @@ Key capabilities include:
 - Custom metrics for domain-specific telemetry.
 - Alerting based on thresholds, anomalies, absence, or query logic.
 
-Cloud Monitoring is often the first stop for answering questions such as:
+Cloud Monitoring is often the first stop for answering follow-up questions such as:
 
-- Is the service healthy?
-- Is latency rising?
-- Are errors increasing?
-- Is capacity close to exhaustion?
-- Did a deployment change CPU, memory, or request behavior?
+**Q: Is the service healthy?**
+Cloud Monitoring answers this by correlating uptime checks, request success metrics, and service dashboards for products such as Cloud Run, GKE, and external HTTP(S) load balancers. Teams can also map these metrics to SLOs so they know whether current behavior is still within the agreed error budget.
+
+**Q: Is latency rising?**
+You can inspect p50, p95, and p99 latency metrics in Metrics Explorer or on a custom dashboard to see whether response times are drifting upward. For deeper analysis, Cloud Monitoring can be paired with Cloud Trace so you can confirm whether the latency increase is coming from application code, dependencies, or network paths.
+
+**Q: Are errors increasing?**
+Error-related metrics from managed services, custom metrics, and log-based metrics can be charted directly in Cloud Monitoring to reveal spikes by revision, zone, or backend service. Alerting policies can then trigger incidents when error ratios cross a threshold or when the rate deviates from normal patterns.
+
+**Q: Is capacity close to exhaustion?**
+Capacity risk is usually identified by watching CPU utilization, memory consumption, disk throughput, connection counts, or quota-related metrics for the affected Google Cloud service. In practice, operators combine these signals with forecast-oriented dashboards and alerts so they can scale a managed instance group, resize a database, or request quota changes before users are impacted.
+
+**Q: Did a deployment change CPU, memory, or request behavior?**
+Cloud Monitoring dashboards can be compared across deployment windows by filtering on resource labels such as Cloud Run revision, GKE workload, or instance group. When release markers, logs, or Cloud Deploy events are correlated with the metric charts, it becomes much easier to prove whether a rollout introduced the behavior change.
 
 ## 1.3 `gcloud` Commands
 
